@@ -3,6 +3,7 @@ import {UserContext} from "../context/UserProvider.jsx";
 import {TicketContext} from "../context/TicketProvider.jsx";
 import {StringBuilder} from "../utilities/StringBuilder.js"
 import TicketBody from "./generic/TicketBody.jsx";
+import {formTransform} from "../utilities/FormTransform.js";
 
 const TicketForm = () => {
 
@@ -11,9 +12,9 @@ const TicketForm = () => {
     const {setTicket} = useContext(TicketContext);
 
     const parseTicket = (formTicket) => {
-        const defTipoEstacion = "TIPO ESTACIÓN: " + formTicket.tipoMaquina;
+        const defTipoEstacion = "TIPO ESTACIÓN: " + formTransform(formTicket.tipoMaquina);
         const sb = new StringBuilder(defTipoEstacion);
-        sb.appendLine("NOMBRE MAQUINA: " + formTicket.tipoMaquina + "-" + formTicket.maquina)
+        sb.appendLine("NOMBRE MAQUINA: " + formTransform(formTicket.tipoMaquina) + "-" + formTransform(formTicket.maquina))
         return sb.toString();
     }
 
@@ -21,7 +22,7 @@ const TicketForm = () => {
         const {name,value,type,checked} = e.target;
         setTicketFormData({
             ...ticketFormData,
-            [name]: type === "checkbox" ? checked : value.trim().toUpperCase(),
+            [name]: type === "checkbox" ? checked : value,
         });
     };
 
@@ -51,13 +52,13 @@ const TicketForm = () => {
                                     <label htmlFor="oficina" className="form-label">Oficina
                                         <div className="btn-group ms-2" role="group">
                                             <input type="radio" className="btn-check" name="tipoOficina" id="oficinaRadio"
-                                                   value="OFICINA" checked={ticketFormData.tipoOficina === "oficina"}
+                                                   value="OFICINA" checked={ticketFormData.tipoOficina === "OFICINA"}
                                                    onChange={handleChange} required/>
                                             <label className="btn btn-outline-primary btn-sm"
                                                    htmlFor="oficinaRadio">Oficina</label>
 
                                             <input type="radio" className="btn-check" name="tipoOficina" id="consuladoRadio"
-                                                   value="CONSULADO" checked={ticketFormData.tipoOficina === "consulado"}
+                                                   value="CONSULADO" checked={ticketFormData.tipoOficina === "CONSULADO"}
                                                    onChange={handleChange}  />
                                             <label className="btn btn-outline-primary btn-sm"
                                                    htmlFor="consuladoRadio">Consulado</label>
@@ -79,37 +80,37 @@ const TicketForm = () => {
                                         <div className="btn-group ms-2" role="group">
                                             <input type="radio" className="btn-check" name="tipoCorreo"
                                                    id="registroCivilRadio"
-                                                   value="registroCivil"
-                                                   checked={ticketFormData.tipoCorreo === "registroCivil"}
+                                                   value="REGISTROCIVIL"
+                                                   checked={ticketFormData.tipoCorreo === "REGISTROCIVIL"}
                                                    onChange={handleChange} required />
                                             <label className="btn btn-outline-primary btn-sm" htmlFor="registroCivilRadio">Registro
                                                 Civil</label>
 
                                             <input type="radio" className="btn-check" name="tipoCorreo"
-                                                   id="consuladoInstRadio" value="consulado"
-                                                   checked={ticketFormData.tipoCorreo === "consulado"}
+                                                   id="consuladoInstRadio" value="CONSULADO"
+                                                   checked={ticketFormData.tipoCorreo === "CONSULADO"}
                                                    onChange={handleChange} />
                                             <label className="btn btn-outline-primary btn-sm"
                                                    htmlFor="consuladoInstRadio">Consulado</label>
 
                                             <input type="radio" className="btn-check" name="tipoCorreo" id="ministerioRadio"
-                                                   value="ministerio"
-                                                   checked={ticketFormData.tipoCorreo === "ministerio"}
+                                                   value="MINISTERIO"
+                                                   checked={ticketFormData.tipoCorreo === "MINISTERIO"}
                                                    onChange={handleChange}
                                             />
                                             <label className="btn btn-outline-primary btn-sm"
                                                    htmlFor="ministerioRadio">Ministerio</label>
 
                                             <input type="radio" className="btn-check" name="tipoCorreo" id="srceiRadio"
-                                                   value="srcei"
-                                                   checked={ticketFormData.tipoCorreo === "srcei"}
+                                                   value="SRCEI"
+                                                   checked={ticketFormData.tipoCorreo === "SRCEI"}
                                                    onChange={handleChange} />
                                             <label className="btn btn-outline-primary btn-sm"
                                                    htmlFor="srceiRadio">SRCEI</label>
 
                                             <input type="radio" className="btn-check" name="tipoCorreo" id="siRadio"
-                                                   value="si"
-                                                   checked={ticketFormData.tipoCorreo === "si"}
+                                                   value="SI"
+                                                   checked={ticketFormData.tipoCorreo === "SI"}
                                                    onChange={handleChange}/>
                                             <label className="btn btn-outline-primary btn-sm" htmlFor="siRadio">S/I</label>
                                         </div>
@@ -213,13 +214,13 @@ const TicketForm = () => {
                                     <div>
                                         <input type="radio" className="form-check-input" name="responsabilidad"
                                                id="responsabilidadSi"
-                                               value="si" checked={ticketFormData.responsabilidad === "si"}
+                                               value="SI" checked={ticketFormData.responsabilidad === "SI"}
                                                onChange={handleChange} required />
                                         <label htmlFor="responsabilidadSi" className="form-check-label">Sí</label>
                                         <input type="radio" className="form-check-input" name="responsabilidad"
                                                id="responsabilidadNo"
-                                               value="no"
-                                               checked={ticketFormData.responsabilidad === "no"}
+                                               value="NO"
+                                               checked={ticketFormData.responsabilidad === "NO"}
                                                onChange={handleChange} required />
                                         <label htmlFor="responsabilidadNo" className="form-check-label">No</label>
                                     </div>
@@ -231,11 +232,11 @@ const TicketForm = () => {
                                     <label className="form-label">Remoto</label>
                                     <div>
                                         <input type="radio" className="form-check-input" name="remoto" id="remotoSi"
-                                               value="si" checked={ticketFormData.remoto === "si"}
+                                               value="SI" checked={ticketFormData.remoto === "SI"}
                                                onChange={handleChange} required />
                                         <label htmlFor="remotoSi" className="form-check-label">Sí</label>
                                         <input type="radio" className="form-check-input" name="remoto" id="remotoNo"
-                                               value="no" checked={ticketFormData.remoto === "no"}
+                                               value="NO" checked={ticketFormData.remoto === "NO"}
                                                onChange={handleChange} />
                                         <label htmlFor="remotoNo" className="form-check-label">No</label>
                                     </div>
@@ -245,13 +246,13 @@ const TicketForm = () => {
                                     <label className="form-label">Mantención Preventiva</label>
                                     <div>
                                         <input type="radio" className="form-check-input" name="mantenimiento"
-                                               id="mantenimientoSi" value="si"
-                                               checked={ticketFormData.mantenimiento === "si"}
+                                               id="mantenimientoSi" value="SI"
+                                               checked={ticketFormData.mantenimiento === "SI"}
                                                onChange={handleChange} required />
                                         <label htmlFor="mantenimientoSi" className="form-check-label">Sí</label>
                                         <input type="radio" className="form-check-input" name="mantenimiento"
-                                               id="mantenimientoNo" value="no"
-                                               checked={ticketFormData.mantenimiento === "no"}
+                                               id="mantenimientoNo" value="NO"
+                                               checked={ticketFormData.mantenimiento === "NO"}
                                                onChange={handleChange}  />
                                         <label htmlFor="mantenimientoNo" className="form-check-label">No</label>
                                     </div>
@@ -261,13 +262,13 @@ const TicketForm = () => {
                                     <label className="form-label">Falla Física</label>
                                     <div>
                                         <input type="radio" className="form-check-input" name="fallaFisica"
-                                               id="fallaFisicaSi" value="si"
-                                               checked={ticketFormData.fallaFisica === "si"}
+                                               id="fallaFisicaSi" value="SI"
+                                               checked={ticketFormData.fallaFisica === "SI"}
                                                onChange={handleChange} required />
                                         <label htmlFor="fallaFisicaSi" className="form-check-label">Sí</label>
                                         <input type="radio" className="form-check-input" name="fallaFisica"
-                                               id="fallaFisicaNo" value="no"
-                                               checked={ticketFormData.fallaFisica === "no"}
+                                               id="fallaFisicaNo" value="NO"
+                                               checked={ticketFormData.fallaFisica === "NO"}
                                                onChange={handleChange}  />
                                         <label htmlFor="fallaFisicaNo" className="form-check-label">No</label>
                                     </div>

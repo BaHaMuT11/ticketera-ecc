@@ -3,6 +3,7 @@ import {TicketContext} from "../../context/TicketProvider.jsx";
 
 const TicketBody = () => {
 
+
     const {ticket} = useContext(TicketContext);
 
     return (
