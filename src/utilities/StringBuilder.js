@@ -1,4 +1,4 @@
-class StringBuilder {
+export class StringBuilder {
     constructor(initialValue = "") {
         this.strings = [initialValue];
     }

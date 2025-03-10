@@ -8,27 +8,28 @@ export const TicketContext = createContext(null);
 export const TicketProvider = ({ children }) => {
     const [ticketFormData, setTicketFormData] = useState({
         nombre: "",
-        tipoOficina: "oficina",
+        tipoOficina: "OFICINA",
         oficina: "",
         problema: "",
         correoElectronico: "",
-        tipoCorreo: "registroCivil",
+        tipoCorreo: "REGISTROCIVIL",
         celular: "",
         fonoFijo: "",
         ip: "164.96.",
         cuentaUsuario: "",
         maquina: "",
         tipoMaquina: "ETF",
-        responsabilidad: "no",
-        remoto: "si",
-        mantenimiento: "no",
-        fallaFisica: "no",
+        responsabilidad: "NO",
+        remoto: "SI",
+        mantenimiento: "NO",
+        fallaFisica: "NO",
         pruebasMesa: ""
     });
-
+    const [ticket, setTicket] = useState("")
     return (
         <TicketContext.Provider value={{
-            ticketFormData, setTicketFormData }}>
+            ticketFormData, setTicketFormData,
+            ticket, setTicket}}>
 
             {children}
         </TicketContext.Provider>
