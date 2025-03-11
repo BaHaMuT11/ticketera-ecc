@@ -9,12 +9,42 @@ const TicketForm = () => {
 
     const {userName} = useContext(UserContext);
     const {ticketFormData, setTicketFormData} = useContext(TicketContext);
-    const {setTicket} = useContext(TicketContext);
+    const {ticket, setTicket} = useContext(TicketContext);
 
     const parseTicket = (formTicket) => {
+
+        console.log(formTicket);
+
         const defTipoEstacion = "TIPO ESTACIÓN: " + formTransform(formTicket.tipoMaquina);
         const sb = new StringBuilder(defTipoEstacion);
-        sb.appendLine("NOMBRE MAQUINA: " + formTransform(formTicket.tipoMaquina) + "-" + formTransform(formTicket.maquina))
+
+        sb.appendLine("NOMBRE MAQUINA: " + formTransform(formTicket.tipoMaquina) + "-" + formTransform(formTicket.maquina));
+        sb.appendLine("NOMBRE: " + formTransform(formTicket.nombre));
+        sb.appendLine("EMAIL: " + (
+            formTransform(formTicket.tipoCorreo) === "REGISTROCIVIL"  ? formTransform(formTicket.correoElectronico) + "@REGISTROCIVIL.GOB.CL" :
+            formTransform(formTicket.tipoCorreo) === "CONSULADO" ? formTransform(formTicket.correoElectronico) + "@MINREL.GOB.CL" :
+            formTransform(formTicket.tipoCorreo) === "MINISTERIO" ? formTransform(formTicket.correoElectronico) + "@MINREL.CL" :
+            formTransform(formTicket.tipoCorreo) === "SRCEI" ? formTransform(formTicket.correoElectronico) + "@SRCEI.CL" :
+            formTransform(formTicket.correoElectronico)));
+
+        sb.appendLine("FONO FIJO: " + formTransform(formTicket.fonoFijo));
+        sb.appendLine("CELULAR: " + formTransform(formTicket.celular));
+        sb.appendLine("OFICINA: " + (
+              formTransform(formTicket.tipoOficina) === "OFICINA"  ? "SRCEI "
+            + formTransform(formTicket.oficina) : "CONSULADO " + formTransform(formTicket.oficina)));
+        sb.appendLine("IP: " + formTransform(formTicket.ip));
+        sb.appendLine("CUENTA USUARIO: " + formTransform(formTicket.cuentaUsuario));
+        sb.appendLine("APLICACIÓN CON PROBLEMA: PORTAL IDWAY");
+        sb.appendLine("PROBLEMA: " + formTransform(formTicket.problema));
+        sb.appendLine("PRUEBAS DE LA MESA: " + formTransform(formTicket.pruebasMesa));
+        sb.appendLine("MANTENCIÓN PREVENTIVA: " + (
+        formTransform(formTicket.mantenimiento) === "SI"  ? "SÍ" : "NO"));
+        sb.appendLine("REMOTO: " + (
+        formTransform(formTicket.remoto) === "SI"  ? "SÍ" : "NO"));
+        sb.appendLine("FALLA FÍSICA HARDWARE: " + (
+        formTransform(formTicket.fallaFisica) === "SI"  ? "SÍ" : "NO"));
+
+
         return sb.toString();
     }
 
@@ -115,7 +145,7 @@ const TicketForm = () => {
                                             <label className="btn btn-outline-primary btn-sm" htmlFor="siRadio">S/I</label>
                                         </div>
                                     </label>
-                                    <input type="email" className="form-control form-control-sm" id="correoElectronico"
+                                    <input type="text" className="form-control form-control-sm" id="correoElectronico"
                                            name="correoElectronico" value={ticketFormData.correoElectronico}
                                            onChange={handleChange} required/>
                                 </div>
@@ -293,7 +323,7 @@ const TicketForm = () => {
                 </div>
             </div>
             <div className="col-md-12">
-                <TicketBody />
+                <TicketBody text={ticket} title={"TICKET"} setter={setTicket} />
             </div>
         </>
     );
