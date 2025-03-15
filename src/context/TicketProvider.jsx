@@ -11,8 +11,6 @@ export const TicketProvider = ({ children }) => {
         tipoOficina: "OFICINA",
         oficina: "",
         problema: "",
-        correoElectronico: "",
-        tipoCorreo: "REGISTROCIVIL",
         celular: "",
         fonoFijo: "",
         ip: "164.96.",

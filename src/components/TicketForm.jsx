@@ -28,13 +28,6 @@ const TicketForm = () => {
 
         sb.appendLine("NOMBRE MAQUINA: " + formTransform(formTicket.tipoMaquina) + "-" + formTransform(formTicket.maquina));
         sb.appendLine("NOMBRE: " + formTransform(formTicket.nombre));
-        sb.appendLine("EMAIL: " + (
-            formTransform(formTicket.tipoCorreo) === "REGISTROCIVIL"  ? formTransform(formTicket.correoElectronico) + "@REGISTROCIVIL.GOB.CL" :
-            formTransform(formTicket.tipoCorreo) === "CONSULADO" ? formTransform(formTicket.correoElectronico) + "@MINREL.GOB.CL" :
-            formTransform(formTicket.tipoCorreo) === "MINISTERIO" ? formTransform(formTicket.correoElectronico) + "@MINREL.CL" :
-            formTransform(formTicket.tipoCorreo) === "SRCEI" ? formTransform(formTicket.correoElectronico) + "@SRCEI.CL" :
-            formTransform(formTicket.correoElectronico)));
-
         sb.appendLine("FONO FIJO: " + formTransform(formTicket.fonoFijo));
         sb.appendLine("CELULAR: " + formTransform(formTicket.celular));
         sb.appendLine("OFICINA: " + (
@@ -124,54 +117,6 @@ const TicketForm = () => {
                                     <input type="text" className="form-control form-control-sm" id="problema"
                                            name="problema" value={ticketFormData.problema} onChange={handleChange}
                                            required/>
-                                </div>
-
-                                <div className="col-md-6 mb-3">
-                                    <label htmlFor="correoElectronico" className="form-label">Correo Electrónico
-                                        <div className="btn-group ms-2" role="group">
-                                            <input type="radio" className="btn-check" name="tipoCorreo"
-                                                   id="registroCivilRadio"
-                                                   value="REGISTROCIVIL"
-                                                   checked={ticketFormData.tipoCorreo === "REGISTROCIVIL"}
-                                                   onChange={handleChange} required/>
-                                            <label className="btn btn-outline-primary btn-sm"
-                                                   htmlFor="registroCivilRadio">Registro
-                                                Civil</label>
-
-                                            <input type="radio" className="btn-check" name="tipoCorreo"
-                                                   id="consuladoInstRadio" value="CONSULADO"
-                                                   checked={ticketFormData.tipoCorreo === "CONSULADO"}
-                                                   onChange={handleChange}/>
-                                            <label className="btn btn-outline-primary btn-sm"
-                                                   htmlFor="consuladoInstRadio">Consulado</label>
-
-                                            <input type="radio" className="btn-check" name="tipoCorreo"
-                                                   id="ministerioRadio"
-                                                   value="MINISTERIO"
-                                                   checked={ticketFormData.tipoCorreo === "MINISTERIO"}
-                                                   onChange={handleChange}
-                                            />
-                                            <label className="btn btn-outline-primary btn-sm"
-                                                   htmlFor="ministerioRadio">Ministerio</label>
-
-                                            <input type="radio" className="btn-check" name="tipoCorreo" id="srceiRadio"
-                                                   value="SRCEI"
-                                                   checked={ticketFormData.tipoCorreo === "SRCEI"}
-                                                   onChange={handleChange}/>
-                                            <label className="btn btn-outline-primary btn-sm"
-                                                   htmlFor="srceiRadio">SRCEI</label>
-
-                                            <input type="radio" className="btn-check" name="tipoCorreo" id="siRadio"
-                                                   value="SI"
-                                                   checked={ticketFormData.tipoCorreo === "SI"}
-                                                   onChange={handleChange}/>
-                                            <label className="btn btn-outline-primary btn-sm"
-                                                   htmlFor="siRadio">S/I</label>
-                                        </div>
-                                    </label>
-                                    <input type="text" className="form-control form-control-sm" id="correoElectronico"
-                                           name="correoElectronico" value={ticketFormData.correoElectronico}
-                                           onChange={handleChange} required/>
                                 </div>
 
                                 <div className="col-md-6 mb-3">
@@ -405,8 +350,8 @@ const TicketForm = () => {
 
                             <div className="d-flex justify-content-around">
                                 <button type="submit" className="btn btn-success">Resolver</button>
-                                <button type="button" className="btn btn-success" onClick={ () => {setN2Visibility(!n2Visibility); setN3Visibility(false); setRotulo(null); setDireccion(null);}}>N2 Adm</button>
-                                <button type="button" className="btn btn-success" onClick={ () => {setN3Visibility(!n3Visibility); setN2Visibility(false);}}>N3 CECOM</button>
+                                <button type="button" className="btn btn-warning" onClick={ () => {setN2Visibility(!n2Visibility); setN3Visibility(false); setRotulo(null); setDireccion(null);}}>N2 Adm</button>
+                                <button type="button" className="btn btn-warning" onClick={ () => {setN3Visibility(!n3Visibility); setN2Visibility(false);}}>N3 CECOM</button>
                             </div>
 
                         </form>
