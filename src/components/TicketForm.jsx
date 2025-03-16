@@ -11,6 +11,7 @@ const TicketForm = () => {
     const {userName} = useContext(UserContext);
     const {ticketFormData, setTicketFormData} = useContext(TicketContext);
     const {ticket, setTicket} = useContext(TicketContext);
+    const {derivacion, setDerivacion} = useContext(TicketContext);
 
     const [n2Visibility, setN2Visibility] = useState(false);
     const [n3Visibility, setN3Visibility] = useState(false);
@@ -310,9 +311,10 @@ const TicketForm = () => {
                             </div>
 
                             <div className="d-flex justify-content-around">
+                                <button type="submit" className="btn btn-success" onClick={ () => setDerivacion("")}>Resolver sin derivar</button>
                                 <button type="submit" className="btn btn-success">Resolver</button>
-                                <button type="button" className="btn btn-warning" onClick={ () => {setN2Visibility(!n2Visibility); setN3Visibility(false); setRotulo(null); setDireccion(null);}}>N2 Adm</button>
-                                <button type="button" className="btn btn-warning" onClick={ () => {setN3Visibility(!n3Visibility); setN2Visibility(false);}}>N3 CECOM</button>
+                                <button type="button" className="btn btn-warning" onClick={ () => {setN2Visibility(!n2Visibility); setN3Visibility(false); setRotulo(null); setDireccion(null); setDerivacion("n2");}}>N2 Adm</button>
+                                <button type="button" className="btn btn-warning" onClick={ () => {setN3Visibility(!n3Visibility); setN2Visibility(false); setDerivacion("n3");}}>N3 CECOM</button>
                             </div>
 
                         </form>
