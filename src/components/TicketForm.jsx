@@ -30,6 +30,9 @@ const TicketForm = () => {
         sb.appendLine("NOMBRE: " + formTransform(formTicket.nombre));
         sb.appendLine("FONO FIJO: " + formTransform(formTicket.fonoFijo));
         sb.appendLine("CELULAR: " + formTransform(formTicket.celular));
+        if (formTransform(formTicket.tipoOficina) !== "OFICINA") {
+            sb.appendLine("WHATSAPP: " + formTransform(formTicket.whatsapp));
+        }
         sb.appendLine("OFICINA: " + (
               formTransform(formTicket.tipoOficina) === "OFICINA"  ? "SRCEI "
             + formTransform(formTicket.oficina) : "CONSULADO " + formTransform(formTicket.oficina)));
@@ -105,6 +108,17 @@ const TicketForm = () => {
                                            required/>
                                 </div>
 
+                                {
+                                    ticketFormData.tipoOficina !== "OFICINA" &&
+                                    (
+                                        <div className="col-md-6 mb-3">
+                                            <label htmlFor="whatsapp" className="form-label">Whatsapp</label>
+                                            <input type="text" className="form-control form-control-sm" id="whatsapp"
+                                                   name="whatsapp" value={ticketFormData.whatsapp} onChange={handleChange}
+                                                   />
+                                        </div>
+                                    )
+                                }
                                 <div className="col-md-6 mb-3">
                                     <label htmlFor="problema" className="form-label">Problema</label>
                                     <input type="text" className="form-control form-control-sm" id="problema"

@@ -10,6 +10,7 @@ export const TicketProvider = ({ children }) => {
         nombre: "",
         tipoOficina: "OFICINA",
         oficina: "",
+        whatsapp: "",
         problema: "",
         celular: "",
         fonoFijo: "",
@@ -21,10 +22,12 @@ export const TicketProvider = ({ children }) => {
         pruebasMesa: ""
     });
     const [ticket, setTicket] = useState("")
+    const [derivacion, setDerivacion] = useState("")
     return (
         <TicketContext.Provider value={{
             ticketFormData, setTicketFormData,
-            ticket, setTicket}}>
+            ticket, setTicket,
+            derivacion, setDerivacion}}>
 
             {children}
         </TicketContext.Provider>
