@@ -19,12 +19,11 @@ const TicketForm = () => {
     const [horario, setHorario] = useState(null);
     const [direccion, setDireccion] = useState(null);
     const [rotulo, setRotulo] = useState(null);
+    const [fallaFisica, setFallaFisica] = useState("NO");
 
     const parseTicket = (formTicket) => {
 
-        console.log(formTicket);
-
-        const defTipoEstacion = "TIPO ESTACIÓN: " + formTransform(formTicket.tipoMaquina);
+        const defTipoEstacion = "TIPO ESTACION: " + formTransform(formTicket.tipoMaquina);
         const sb = new StringBuilder(defTipoEstacion);
 
         sb.appendLine("NOMBRE MAQUINA: " + formTransform(formTicket.tipoMaquina) + "-" + formTransform(formTicket.maquina));
@@ -39,16 +38,26 @@ const TicketForm = () => {
             + formTransform(formTicket.oficina) : "CONSULADO " + formTransform(formTicket.oficina)));
         sb.appendLine("IP: " + formTransform(formTicket.ip));
         sb.appendLine("CUENTA DE USUARIO: " + formTransform(formTicket.cuentaUsuario));
-        sb.appendLine("PROBLEMA_PRE-DIAGNÓSTICO: " + formTransform(formTicket.problema));
+        sb.appendLine("PROBLEMA_PRE-DIAGNOSTICO: " + formTransform(formTicket.problema));
         sb.appendLine("PRUEBAS DE LA MESA: " + formTransform(formTicket.pruebasMesa));
-        if (isset(direccion)) {
-            sb.appendLine("DIRECCIÓN: " + formTransform(direccion));
+
+        if (derivacion === "n2") {
+            if (isset(horario)) {
+                sb.appendLine("DIAS Y HORARIO DE CHILE: " + formTransform(horario));
+            }
         }
-        if (isset(rotulo)) {
-            sb.appendLine("RÓTULO: " + formTransform(rotulo));
-        }
-        if (isset(horario)) {
-            sb.appendLine("HORARIO OFICINA: " + formTransform(horario));
+
+        if (derivacion === "n3") {
+            sb.appendLine("FALLA FISICA HW: " + formTransform(fallaFisica));
+            if (isset(direccion)) {
+                sb.appendLine("DIRECCION: " + formTransform(direccion));
+            }
+            if (isset(horario)) {
+                sb.appendLine("DIAS Y HORARIO DE OFICINA: " + formTransform(horario));
+            }
+            if (isset(rotulo)) {
+                sb.appendLine("ROTULO: " + formTransform(rotulo));
+            }
         }
 
         return sb.toString();
@@ -70,7 +79,7 @@ const TicketForm = () => {
 
     return (
         <>
-            <div className="col-md-12">
+            <div className="col-md-12 mb-2">
                 <div className="card">
                     <div className="card-header text-bg-primary">
                         <h5 className="mb-0">CREACIÓN DEL TICKET - {userName.nombre2}</h5>
@@ -305,6 +314,21 @@ const TicketForm = () => {
                                                 <input type="text" className="form-control form-control-sm" id="rotulo"
                                                        name="rotulo" value={rotulo} onChange={ (e) => setRotulo(e.target.value)} />
                                             </div>
+                                            <div className="col-md-4 mb-3">
+                                                <label className="form-label">Falla Física</label>
+                                                <div>
+                                                    <input type="radio" className="form-check-input" name="fallaFisica"
+                                                           id="fallaFisicaSi" value="SI"
+                                                           checked={fallaFisica === "SI"}
+                                                           onChange={() => setFallaFisica("SI")} required/>
+                                                    <label htmlFor="fallaFisicaSi" className="form-check-label">Sí</label>
+                                                    <input type="radio" className="form-check-input" name="fallaFisica"
+                                                           id="fallaFisicaNo" value="NO"
+                                                           checked={fallaFisica === "NO"}
+                                                           onChange={() => setFallaFisica("NO")} />
+                                                    <label htmlFor="fallaFisicaNo" className="form-check-label">No</label>
+                                                </div>
+                                            </div>
                                         </div>
                                     )
                                 }
@@ -321,8 +345,11 @@ const TicketForm = () => {
                     </div>
                 </div>
             </div>
-            <div className="col-md-12">
+            <div className="col-md-12 mb-2">
                 <TicketBody text={ticket} title={"TICKET"} setter={setTicket}/>
+            </div>
+            <div className="col-md-12 mb-2">
+                <button type="submit" className="btn btn-outline-warning btn-primary btn-lg text-light w-100">Continuar</button>
             </div>
         </>
     );
