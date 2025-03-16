@@ -34,16 +34,9 @@ const TicketForm = () => {
               formTransform(formTicket.tipoOficina) === "OFICINA"  ? "SRCEI "
             + formTransform(formTicket.oficina) : "CONSULADO " + formTransform(formTicket.oficina)));
         sb.appendLine("IP: " + formTransform(formTicket.ip));
-        sb.appendLine("CUENTA USUARIO: " + formTransform(formTicket.cuentaUsuario));
-        sb.appendLine("APLICACIÓN CON PROBLEMA: PORTAL IDWAY");
-        sb.appendLine("PROBLEMA: " + formTransform(formTicket.problema));
+        sb.appendLine("CUENTA DE USUARIO: " + formTransform(formTicket.cuentaUsuario));
+        sb.appendLine("PROBLEMA_PRE-DIAGNÓSTICO: " + formTransform(formTicket.problema));
         sb.appendLine("PRUEBAS DE LA MESA: " + formTransform(formTicket.pruebasMesa));
-        sb.appendLine("MANTENCIÓN PREVENTIVA: " + (
-        formTransform(formTicket.mantenimiento) === "SI"  ? "SÍ" : "NO"));
-        sb.appendLine("REMOTO: " + (
-        formTransform(formTicket.remoto) === "SI"  ? "SÍ" : "NO"));
-        sb.appendLine("FALLA FÍSICA HARDWARE: " + (
-        formTransform(formTicket.fallaFisica) === "SI"  ? "SÍ" : "NO"));
         if (isset(direccion)) {
             sb.appendLine("DIRECCIÓN: " + formTransform(direccion));
         }
@@ -139,15 +132,16 @@ const TicketForm = () => {
                                            value={ticketFormData.ip} onChange={handleChange} required/>
                                 </div>
 
+                            </div>
+
+                            <div className="row mb-2">
                                 <div className="col-md-6 mb-3">
                                     <label htmlFor="cuentaUsuario" className="form-label">Cuenta de Usuario</label>
                                     <input type="text" className="form-control form-control-sm" id="cuentaUsuario"
                                            name="cuentaUsuario" value={ticketFormData.cuentaUsuario}
                                            onChange={handleChange} required/>
                                 </div>
-                            </div>
 
-                            <div className="row mb-2">
                                 <div className="col-md-6 mb-3">
                                     <label htmlFor="maquina" className="form-label">Máquina
                                         <div className="btn-group ms-2" role="group">
@@ -228,53 +222,6 @@ const TicketForm = () => {
                                 </div>
                             </div>
 
-                            <div className="row">
-                                <div className="col-md-4 mb-3">
-                                    <label className="form-label">Remoto</label>
-                                    <div>
-                                        <input type="radio" className="form-check-input" name="remoto" id="remotoSi"
-                                               value="SI" checked={ticketFormData.remoto === "SI"}
-                                               onChange={handleChange} required/>
-                                        <label htmlFor="remotoSi" className="form-check-label">Sí</label>
-                                        <input type="radio" className="form-check-input" name="remoto" id="remotoNo"
-                                               value="NO" checked={ticketFormData.remoto === "NO"}
-                                               onChange={handleChange}/>
-                                        <label htmlFor="remotoNo" className="form-check-label">No</label>
-                                    </div>
-                                </div>
-
-                                <div className="col-md-4 mb-3">
-                                    <label className="form-label">Mantención Preventiva</label>
-                                    <div>
-                                        <input type="radio" className="form-check-input" name="mantenimiento"
-                                               id="mantenimientoSi" value="SI"
-                                               checked={ticketFormData.mantenimiento === "SI"}
-                                               onChange={handleChange} required/>
-                                        <label htmlFor="mantenimientoSi" className="form-check-label">Sí</label>
-                                        <input type="radio" className="form-check-input" name="mantenimiento"
-                                               id="mantenimientoNo" value="NO"
-                                               checked={ticketFormData.mantenimiento === "NO"}
-                                               onChange={handleChange}/>
-                                        <label htmlFor="mantenimientoNo" className="form-check-label">No</label>
-                                    </div>
-                                </div>
-
-                                <div className="col-md-4 mb-3">
-                                    <label className="form-label">Falla Física</label>
-                                    <div>
-                                        <input type="radio" className="form-check-input" name="fallaFisica"
-                                               id="fallaFisicaSi" value="SI"
-                                               checked={ticketFormData.fallaFisica === "SI"}
-                                               onChange={handleChange} required/>
-                                        <label htmlFor="fallaFisicaSi" className="form-check-label">Sí</label>
-                                        <input type="radio" className="form-check-input" name="fallaFisica"
-                                               id="fallaFisicaNo" value="NO"
-                                               checked={ticketFormData.fallaFisica === "NO"}
-                                               onChange={handleChange}/>
-                                        <label htmlFor="fallaFisicaNo" className="form-check-label">No</label>
-                                    </div>
-                                </div>
-                            </div>
 
                             <div className="mb-3">
                                 <label htmlFor="pruebasMesa" className="form-label">Pruebas de la Mesa</label>

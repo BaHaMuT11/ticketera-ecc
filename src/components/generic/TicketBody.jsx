@@ -28,7 +28,7 @@ const TicketBody = (props) => {
                 <button className="btn btn-outline-light btn-sm" onClick={handleCopy}>Copiar!</button>
             </div>
             <div className="card-body">
-                <textarea className="form-control" rows="21" value={text} onChange={onChange}/>
+                <textarea className="form-control" rows="15" value={text} onChange={onChange}/>
             </div>
         </div>
     );
