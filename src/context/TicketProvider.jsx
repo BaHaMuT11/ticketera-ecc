@@ -18,9 +18,6 @@ export const TicketProvider = ({ children }) => {
         maquina: "",
         tipoMaquina: "ETF",
         responsabilidad: "NO",
-        remoto: "SI",
-        mantenimiento: "NO",
-        fallaFisica: "NO",
         pruebasMesa: ""
     });
     const [ticket, setTicket] = useState("")
