@@ -5,6 +5,7 @@ import {StringBuilder} from "../utilities/StringBuilder.js"
 import TicketBody from "./generic/TicketBody.jsx";
 import {formTransform} from "../utilities/FormTransform.js";
 import {isset} from "../utilities/Isset.js";
+import {useNavigate} from "react-router";
 
 const TicketForm = () => {
 
@@ -15,6 +16,8 @@ const TicketForm = () => {
 
     const [n2Visibility, setN2Visibility] = useState(false);
     const [n3Visibility, setN3Visibility] = useState(false);
+
+    const navigate = useNavigate();
 
     const [horario, setHorario] = useState(null);
     const [direccion, setDireccion] = useState(null);
@@ -70,6 +73,10 @@ const TicketForm = () => {
             [name]: type === "checkbox" ? checked : value,
         });
     };
+
+    const handleEnding = () => {
+        navigate("/baha-responsible");
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -349,7 +356,11 @@ const TicketForm = () => {
                 <TicketBody text={ticket} title={"TICKET"} setter={setTicket}/>
             </div>
             <div className="col-md-12 mb-2">
-                <button type="submit" className="btn btn-outline-warning btn-primary btn-lg text-light w-100">Continuar</button>
+                <button type="submit"
+                        className="btn btn-outline-warning btn-primary btn-lg text-light w-100"
+                        onClick={handleEnding}>
+                    Continuar
+                </button>
             </div>
         </>
     );
