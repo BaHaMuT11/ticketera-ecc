@@ -75,7 +75,11 @@ const TicketForm = () => {
     };
 
     const handleEnding = () => {
-        navigate("/baha-responsible");
+        if (ticketFormData.responsabilidad == "SI") {
+            navigate("/baha-responsible");
+        } else {
+            navigate("/baha-summary");
+        }
     }
 
     const handleSubmit = (e) => {
