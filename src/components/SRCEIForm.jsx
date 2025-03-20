@@ -1,5 +1,18 @@
+import {useContext} from "react";
+import {ResposibilityContext} from "../context/ResponsibilityProvider.jsx";
 
 const SrceiForm = () => {
+
+    const {srceiFormData, setSrceiFormData} = useContext(ResposibilityContext)
+
+    const handleChange = (e) => {
+        const {name,value,type,checked} = e.target;
+        setSrceiFormData({
+            ...srceiFormData,
+            [name]: type === "checkbox" ? checked : value,
+        });
+    };
+
     return (
         <div className="col-md-12">
             <div className="card">
@@ -15,7 +28,8 @@ const SrceiForm = () => {
                             </div>
                             <div className="col-md-6 mb-3">
                                 <label htmlFor="servicio" className="form-label">Servicio</label>
-                                <select className="form-select form-select-sm" id="servicio" name="servicio" required>
+                                <select className="form-select form-select-sm" id="servicio" name="servicio"
+                                        onChange={handleChange} required>
                                     <option value="Impresoras">Impresoras</option>
                                     <option value="Pagos (Transbank)">Pagos (Transbank)</option>
                                     <option value="Redes de comunicación- Internet">Redes de comunicación- Internet</option>

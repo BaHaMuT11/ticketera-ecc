@@ -135,8 +135,9 @@ const TicketForm = () => {
                                         <div className="col-md-6 mb-3">
                                             <label htmlFor="whatsapp" className="form-label">Whatsapp</label>
                                             <input type="text" className="form-control form-control-sm" id="whatsapp"
-                                                   name="whatsapp" value={ticketFormData.whatsapp} onChange={handleChange}
-                                                   />
+                                                   name="whatsapp" value={ticketFormData.whatsapp}
+                                                   onChange={handleChange}
+                                            />
                                         </div>
                                     )
                                 }
@@ -151,14 +152,47 @@ const TicketForm = () => {
                                     <label htmlFor="celular" className="form-label">Celular</label>
                                     <input type="tel" className="form-control form-control-sm" id="celular"
                                            name="celular"
-                                           value={ticketFormData.celular} onChange={handleChange} />
+                                           value={ticketFormData.celular} onChange={handleChange}/>
+                                </div>
+
+                                <div className="col-md-6 mb-3">
+                                    <label htmlFor="correoElectronico" className="form-label">Correo Electrónico
+                                        <div className="btn-group ms-2" role="group">
+                                            <input type="radio" className="btn-check" name="tipoCorreo"
+                                                   id="registroCivilRadio" value="REGISTROCIVIL" checked/>
+                                            <label className="btn btn-outline-primary btn-sm"
+                                                   htmlFor="registroCivilRadio">Registro Civil</label>
+
+                                            <input type="radio" className="btn-check" name="tipoCorreo"
+                                                   id="consuladoInstRadio" value="CONSULADO"/>
+                                            <label className="btn btn-outline-primary btn-sm"
+                                                   htmlFor="consuladoInstRadio">Consulado</label>
+
+                                            <input type="radio" className="btn-check" name="tipoCorreo"
+                                                   id="ministerioRadio" value="MINISTERIO"/>
+                                            <label className="btn btn-outline-primary btn-sm"
+                                                   htmlFor="ministerioRadio">Ministerio</label>
+
+                                            <input type="radio" className="btn-check" name="tipoCorreo" id="srceiRadio"
+                                                   value="SRCEI"/>
+                                            <label className="btn btn-outline-primary btn-sm"
+                                                   htmlFor="srceiRadio">SRCEI</label>
+
+                                            <input type="radio" className="btn-check" name="tipoCorreo" id="siRadio"
+                                                   value="SI"/>
+                                            <label className="btn btn-outline-primary btn-sm"
+                                                   htmlFor="siRadio">S/I</label>
+                                        </div>
+                                    </label>
+                                    <input type="email" className="form-control form-control-sm" id="correoElectronico"
+                                           name="correoElectronico" required/>
                                 </div>
 
                                 <div className="col-md-6 mb-3">
                                     <label htmlFor="fonoFijo" className="form-label">Fono Fijo</label>
                                     <input type="tel" className="form-control form-control-sm" id="fonoFijo"
                                            name="fonoFijo" value={ticketFormData.fonoFijo}
-                                           onChange={handleChange} />
+                                           onChange={handleChange}/>
                                 </div>
 
                                 <div className="col-md-6 mb-3">
@@ -362,7 +396,7 @@ const TicketForm = () => {
             <div className="col-md-12 mb-2">
                 <button type="submit"
                         className="btn btn-outline-warning btn-primary btn-lg text-light w-100"
-                        onClick={handleEnding}>
+                        onClick={handleEnding} disabled>
                     Continuar
                 </button>
             </div>

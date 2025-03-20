@@ -1,10 +1,17 @@
+import {createContext, useState} from "react";
 
+export const ResposibilityContext = createContext(null);
 
-const ResponsibilityProvider = () => {
+// eslint-disable-next-line react/prop-types
+const ResponsibilityProvider = ({children}) => {
+
+    const [srceiFormData, setSrceiFormData] = useState({
+    });
     return (
-        <div>
-
-        </div>
+        <ResposibilityContext.Provider value={{
+            srceiFormData, setSrceiFormData}}>
+            {children}
+        </ResposibilityContext.Provider>
     );
 };
 

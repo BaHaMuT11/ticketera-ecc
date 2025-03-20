@@ -13,6 +13,8 @@ export const TicketProvider = ({ children }) => {
         whatsapp: "",
         problema: "",
         celular: "",
+        correoElectronico: "",
+        tipoCorreo:"",
         fonoFijo: "",
         ip: "164.96.",
         cuentaUsuario: "",
