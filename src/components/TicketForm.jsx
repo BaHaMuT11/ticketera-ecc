@@ -165,33 +165,48 @@ const TicketForm = () => {
                                     <label htmlFor="correoElectronico" className="form-label">Correo Electrónico
                                         <div className="btn-group ms-2" role="group">
                                             <input type="radio" className="btn-check" name="tipoCorreo"
-                                                   id="registroCivilRadio" value="REGISTROCIVIL" checked/>
+                                                   id="registroCivilRadio"
+                                                   value="REGISTROCIVIL"
+                                                   checked={ticketFormData.tipoCorreo === "REGISTROCIVIL"}
+                                                   onChange={handleChange} required/>
                                             <label className="btn btn-outline-primary btn-sm"
-                                                   htmlFor="registroCivilRadio">Registro Civil</label>
+                                                   htmlFor="registroCivilRadio">Registro
+                                                Civil</label>
 
                                             <input type="radio" className="btn-check" name="tipoCorreo"
-                                                   id="consuladoInstRadio" value="CONSULADO"/>
+                                                   id="consuladoInstRadio" value="CONSULADO"
+                                                   checked={ticketFormData.tipoCorreo === "CONSULADO"}
+                                                   onChange={handleChange}/>
                                             <label className="btn btn-outline-primary btn-sm"
                                                    htmlFor="consuladoInstRadio">Consulado</label>
 
                                             <input type="radio" className="btn-check" name="tipoCorreo"
-                                                   id="ministerioRadio" value="MINISTERIO"/>
+                                                   id="ministerioRadio"
+                                                   value="MINISTERIO"
+                                                   checked={ticketFormData.tipoCorreo === "MINISTERIO"}
+                                                   onChange={handleChange}
+                                            />
                                             <label className="btn btn-outline-primary btn-sm"
                                                    htmlFor="ministerioRadio">Ministerio</label>
 
                                             <input type="radio" className="btn-check" name="tipoCorreo" id="srceiRadio"
-                                                   value="SRCEI"/>
+                                                   value="SRCEI"
+                                                   checked={ticketFormData.tipoCorreo === "SRCEI"}
+                                                   onChange={handleChange}/>
                                             <label className="btn btn-outline-primary btn-sm"
                                                    htmlFor="srceiRadio">SRCEI</label>
 
                                             <input type="radio" className="btn-check" name="tipoCorreo" id="siRadio"
-                                                   value="SI"/>
+                                                   value="SI"
+                                                   checked={ticketFormData.tipoCorreo === "SI"}
+                                                   onChange={handleChange}/>
                                             <label className="btn btn-outline-primary btn-sm"
                                                    htmlFor="siRadio">S/I</label>
                                         </div>
                                     </label>
-                                    <input type="email" className="form-control form-control-sm" id="correoElectronico"
-                                           name="correoElectronico" required/>
+                                    <input type="text" className="form-control form-control-sm" id="correoElectronico"
+                                           name="correoElectronico" value={ticketFormData.correoElectronico}
+                                           onChange={handleChange} required/>
                                 </div>
 
                                 <div className="col-md-6 mb-3">
