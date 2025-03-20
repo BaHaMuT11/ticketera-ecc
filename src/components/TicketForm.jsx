@@ -36,6 +36,12 @@ const TicketForm = () => {
         if (formTransform(formTicket.tipoOficina) !== "OFICINA") {
             sb.appendLine("WHATSAPP: " + formTransform(formTicket.whatsapp));
         }
+        sb.appendLine("CORREO ELECTRONICO: " + (
+            formTransform(formTicket.tipoCorreo) === "REGISTROCIVIL"  ? formTransform(formTicket.correoElectronico) + "@REGISTROCIVIL.GOB.CL" :
+                formTransform(formTicket.tipoCorreo) === "CONSULADO" ? formTransform(formTicket.correoElectronico) + "@MINREL.GOB.CL" :
+                    formTransform(formTicket.tipoCorreo) === "MINISTERIO" ? formTransform(formTicket.correoElectronico) + "@MINREL.CL" :
+                        formTransform(formTicket.tipoCorreo) === "SRCEI" ? formTransform(formTicket.correoElectronico) + "@SRCEI.CL" :
+                            formTransform(formTicket.correoElectronico)));
         sb.appendLine("OFICINA: " + (
               formTransform(formTicket.tipoOficina) === "OFICINA"  ? "SRCEI "
             + formTransform(formTicket.oficina) : "CONSULADO " + formTransform(formTicket.oficina)));
