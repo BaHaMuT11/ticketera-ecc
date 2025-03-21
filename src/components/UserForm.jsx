@@ -33,7 +33,7 @@ const UserForm = () => {
                             <div className="col-md-12 mb-3">
                                 <label htmlFor="nombre2" className="form-label">Nombre</label>
                                 <input type="text" className="form-control form-control-sm" id="nombre2" name="nombre2"
-                                       value={userName.nombre2} onChange={handleChange} />
+                                       value={userName.nombre2} onChange={handleChange} required />
                             </div>
                             <div className="d-flex justify-content-center">
                                 <button type="submit" className="btn btn-success">Continuar</button>

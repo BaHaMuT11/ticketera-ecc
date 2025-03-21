@@ -417,7 +417,7 @@ const TicketForm = () => {
             <div className="col-md-12 mb-2">
                 <button type="submit"
                         className="btn btn-outline-warning btn-primary btn-lg text-light w-100"
-                        onClick={handleEnding} disabled>
+                        onClick={handleEnding}>
                     Continuar
                 </button>
             </div>

@@ -6,6 +6,13 @@ export const ResposibilityContext = createContext(null);
 const ResponsibilityProvider = ({children}) => {
 
     const [srceiFormData, setSrceiFormData] = useState({
+        nombreTicket: "",
+        servicio: "Impresoras",
+        sintoma: "",
+        diagnostico: "",
+        otros: "",
+        region: "",
+        taxonomia: ""
     });
     return (
         <ResposibilityContext.Provider value={{

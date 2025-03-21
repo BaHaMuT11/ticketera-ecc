@@ -13,6 +13,10 @@ const SrceiForm = () => {
         });
     };
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+    }
+
     return (
         <div className="col-md-12">
             <div className="card">
@@ -20,16 +24,19 @@ const SrceiForm = () => {
                     <h5 className="mb-0">TICKET DE RESPONSABILIDAD</h5>
                 </div>
                 <div className="card-body">
-                    <form id="formularioResponsabilidad">
+                    <form id="formularioResponsabilidad" onSubmit={handleSubmit}>
                         <div className="row">
                             <div className="col-md-6 mb-3">
-                                <label htmlFor="ticket" className="form-label">Ticket</label>
-                                <input type="text" className="form-control form-control-sm" id="ticket" name="ticket" required/>
+                                <label htmlFor="nombreTicket" className="form-label">Ticket</label>
+                                <input type="text" className="form-control form-control-sm" id="nombreTicket"
+                                       name="nombreTicket"
+                                       value={srceiFormData.nombreTicket} onChange={handleChange}
+                                       placeholder="Ej.: INC000015237270" required/>
                             </div>
                             <div className="col-md-6 mb-3">
                                 <label htmlFor="servicio" className="form-label">Servicio</label>
                                 <select className="form-select form-select-sm" id="servicio" name="servicio"
-                                        onChange={handleChange} required>
+                                        value={srceiFormData.servicio} onChange={handleChange} required>
                                     <option value="Impresoras">Impresoras</option>
                                     <option value="Pagos (Transbank)">Pagos (Transbank)</option>
                                     <option value="Redes de comunicación- Internet">Redes de comunicación- Internet</option>
@@ -41,25 +48,33 @@ const SrceiForm = () => {
                             <div className="col-md-6 mb-3">
                                 <label htmlFor="sintoma" className="form-label">Síntoma</label>
                                 <input type="text" className="form-control form-control-sm" id="sintoma" name="sintoma"
-                                       required/>
+                                       value={srceiFormData.sintoma} onChange={handleChange}
+                                       placeholder="Ej.: Módulo de captura se demroa 15 minutos en iniciar" required/>
                             </div>
                             <div className="col-md-6 mb-3">
                                 <label htmlFor="diagnostico" className="form-label">Diagnóstico</label>
                                 <input type="text" className="form-control form-control-sm" id="diagnostico" name="diagnostico"
+                                       value={srceiFormData.diagnostico} onChange={handleChange}
+                                       placeholder="Ej.: Demora se debe a problemas de red en la oficina"
                                        required/>
                             </div>
                             <div className="col-md-6 mb-3">
                                 <label htmlFor="otros" className="form-label">Otros</label>
-                                <input type="text" className="form-control form-control-sm" id="otros" name="otros"/>
+                                <input type="text" className="form-control form-control-sm" id="otros" name="otros"
+                                       value={srceiFormData.otros} onChange={handleChange}
+                                       placeholder="Ej.: Se colocaron imagenes de respaldo en ticket"/>
                             </div>
                             <div className="col-md-6 mb-3">
                                 <label htmlFor="region" className="form-label">Región</label>
-                                <input type="text" className="form-control form-control-sm" id="region" name="region" required/>
+                                <input type="text" className="form-control form-control-sm" id="region" name="region"
+                                       value={srceiFormData.region} onChange={handleChange}
+                                       placeholder="Ej.: BIO BIO" required/>
                             </div>
                             <div className="col-md-12 mb-3">
                                 <label htmlFor="taxonomia" className="form-label">Taxonomía</label>
                                 <input type="text" className="form-control form-control-sm" id="taxonomia" name="taxonomia"
-                                       required/>
+                                       value={srceiFormData.taxonomia} onChange={handleChange}
+                                       placeholder="Ej.: REVISAR" required/>
                             </div>
                         </div>
                         <button type="submit" className="btn btn-dark">Generar asunto y cuerpo</button>
