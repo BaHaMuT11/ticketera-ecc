@@ -1,4 +1,4 @@
-import {useContext} from "react";
+import {useContext, useState} from "react";
 import {ResposibilityContext} from "../context/ResponsibilityProvider.jsx";
 import TicketBody from "./generic/TicketBody.jsx";
 import {formTransform} from "../utilities/FormTransform.js";
@@ -12,7 +12,10 @@ const SrceiForm = () => {
 
     const {srceiFormData, setSrceiFormData} = useContext(ResposibilityContext)
     const {srceiTicket, setSrceiTicket} = useContext(ResposibilityContext);
+
     const {ticketExport} = useContext(TicketContext);
+
+    const [asunto, setAsunto] = useState("");
 
     const handleChange = (e) => {
         const {name,value,type,checked} = e.target;
@@ -45,10 +48,38 @@ const SrceiForm = () => {
         return sb.toString();
     }
 
+    const clasificarServicio = (sevicio) => {
+
+        let clasificacion = "";
+
+        if (sevicio === "Impresoras") {
+            clasificacion = "IMPRESORAS";
+        }
+
+        if (sevicio === "Pagos (Transbank)") {
+            clasificacion = "TRANSBANK";
+        }
+
+        if (sevicio === "Redes de comunicación- Internet") {
+            clasificacion = "REDES";
+        }
+
+        if (sevicio === "Redes de suministro eléctrico") {
+            clasificacion = "SUMINISTRO";
+        }
+
+        if (sevicio === "Licencias de Ofimática (Office 365)") {
+            clasificacion = "OFIMATICA";
+        }
+
+        return clasificacion;
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const ticket = parseSrceiTicket(srceiFormData);
         setSrceiTicket(ticket);
+        setAsunto(clasificarServicio(srceiFormData.servicio)+ " - " + formTransform(srceiFormData.taxonomia) + " - " + formTransform(srceiFormData.region));
     }
 
     return (
@@ -114,6 +145,11 @@ const SrceiForm = () => {
                             </div>
                             <button type="submit" className="btn btn-dark">Generar asunto y cuerpo</button>
                         </form>
+                    </div>
+                    <div className="row">
+                        <div className="col-md-12 mt-3">
+                            <TicketBody title="Asunto" text={asunto} setter={setAsunto} rows={3} bootstrapColor="text-bg-dark"  />
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-md-12 mt-3">
