@@ -20,15 +20,16 @@ const TicketBody = (props) => {
         setText(props.text);
     }, [props.text]);
 
+    const color = "card-header " + props.bootstrapColor + " d-flex justify-content-between align-items-center";
 
     return (
         <div className="card">
-            <div className="card-header text-bg-primary d-flex justify-content-between align-items-center">
+            <div className={color}>
                 <h5 className="mb-0">{props.title}</h5>
                 <button className="btn btn-outline-light btn-sm" onClick={handleCopy}>Copiar!</button>
             </div>
             <div className="card-body">
-                <textarea className="form-control" rows="15" value={text} onChange={onChange}/>
+                <textarea className="form-control" rows={props.rows} value={text} onChange={onChange}/>
             </div>
         </div>
     );
@@ -37,7 +38,9 @@ const TicketBody = (props) => {
 TicketBody.propTypes = {
     title: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired,
-    setter: PropTypes.func.isRequired
+    setter: PropTypes.func.isRequired,
+    rows: PropTypes.number.isRequired,
+    bootstrapColor: PropTypes.string.isRequired
 }
 
 export default TicketBody;

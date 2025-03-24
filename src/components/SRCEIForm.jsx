@@ -1,10 +1,18 @@
 import {useContext} from "react";
 import {ResposibilityContext} from "../context/ResponsibilityProvider.jsx";
 import TicketBody from "./generic/TicketBody.jsx";
+import {formTransform} from "../utilities/FormTransform.js";
+import {StringBuilder} from "../utilities/StringBuilder.js";
+import {UserContext} from "../context/UserProvider.jsx";
+import {TicketContext} from "../context/TicketProvider.jsx";
 
 const SrceiForm = () => {
 
+    const {userName} = useContext(UserContext);
+
     const {srceiFormData, setSrceiFormData} = useContext(ResposibilityContext)
+    const {srceiTicket, setSrceiTicket} = useContext(ResposibilityContext);
+    const {ticketExport} = useContext(TicketContext);
 
     const handleChange = (e) => {
         const {name,value,type,checked} = e.target;
@@ -14,8 +22,33 @@ const SrceiForm = () => {
         });
     };
 
+    const parseSrceiTicket = (srceiData) => {
+        const defTicketSN = "• Ticket Service Now: " + formTransform(srceiData.nombreTicket);
+        const sb = new StringBuilder(defTicketSN);
+
+        sb.appendLine("• Servicio: " + formTransform(srceiData.servicio));
+        sb.appendLine("• Oficina: " + ticketExport.oficina);
+        sb.appendLine("• Nombre Funcionario: " + ticketExport.nombre);
+        sb.appendLine("• Correo: " + ticketExport.correo);
+        sb.appendLine("• Estación: " + ticketExport.estacion);
+        sb.appendLine("• Número de Contacto Respaldo: " + ticketExport.numero);
+        sb.appendLine("• Síntoma: " + formTransform(srceiData.sintoma));
+        sb.appendLine("• Diagnóstico: " + formTransform(srceiData.diagnostico));
+        sb.appendLine("• Otros : " + formTransform(srceiData.otros));
+        sb.appendLine("");
+        sb.appendLine("");
+        sb.appendLine("Saludos,");
+        sb.appendLine("Mesa de Servicios Nuevo SIDIV");
+        sb.appendLine(userName.nombre2);
+        sb.appendLine("Email: mdsf@nuevosidiv.registrocivil.cl");
+
+        return sb.toString();
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
+        const ticket = parseSrceiTicket(srceiFormData);
+        setSrceiTicket(ticket);
     }
 
     return (
@@ -83,7 +116,9 @@ const SrceiForm = () => {
                         </form>
                     </div>
                     <div className="row">
-                        <TicketBody title="Correo Responsabilidad" text="Correo" setter={setSrceiFormData} />
+                        <div className="col-md-12 mt-3">
+                            <TicketBody title="Correo Responsabilidad" text={srceiTicket} setter={setSrceiTicket} rows={18} bootstrapColor="text-bg-dark"  />
+                        </div>
                     </div>
                 </div>
             </div>

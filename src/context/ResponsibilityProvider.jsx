@@ -14,9 +14,12 @@ const ResponsibilityProvider = ({children}) => {
         region: "",
         taxonomia: ""
     });
+    const [srceiTicket, setSrceiTicket] = useState("");
+
     return (
         <ResposibilityContext.Provider value={{
-            srceiFormData, setSrceiFormData}}>
+            srceiFormData, setSrceiFormData,
+            srceiTicket, setSrceiTicket}}>
             {children}
         </ResposibilityContext.Provider>
     );

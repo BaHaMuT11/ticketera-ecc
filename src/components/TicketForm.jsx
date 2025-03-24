@@ -13,6 +13,7 @@ const TicketForm = () => {
     const {ticketFormData, setTicketFormData} = useContext(TicketContext);
     const {ticket, setTicket} = useContext(TicketContext);
     const {derivacion, setDerivacion} = useContext(TicketContext);
+    const {setTicketExport} = useContext(TicketContext);
 
     const [n2Visibility, setN2Visibility] = useState(false);
     const [n3Visibility, setN3Visibility] = useState(false);
@@ -24,27 +25,39 @@ const TicketForm = () => {
     const [rotulo, setRotulo] = useState(null);
     const [fallaFisica, setFallaFisica] = useState("NO");
 
+    const[correoExport, setCorreoExport] = useState("");
+    const[maquinaExport, setMaquinaExport] = useState("");
+    const[oficinaExport, setOficinaExport] = useState("");
+
     const parseTicket = (formTicket) => {
 
         const defTipoEstacion = "TIPO ESTACION: " + formTransform(formTicket.tipoMaquina);
         const sb = new StringBuilder(defTipoEstacion);
 
-        sb.appendLine("NOMBRE MAQUINA: " + formTransform(formTicket.tipoMaquina) + "-" + formTransform(formTicket.maquina));
+        const construirCorreo = () => (
+            formTransform(formTicket.tipoCorreo) === "REGISTROCIVIL"  ? formTransform(formTicket.correoElectronico) + "@REGISTROCIVIL.GOB.CL" :
+                formTransform(formTicket.tipoCorreo) === "CONSULADO" ? formTransform(formTicket.correoElectronico) + "@MINREL.GOB.CL" :
+                    formTransform(formTicket.tipoCorreo) === "MINISTERIO" ? formTransform(formTicket.correoElectronico) + "@MINREL.CL" :
+                        formTransform(formTicket.tipoCorreo) === "SRCEI" ? formTransform(formTicket.correoElectronico) + "@SRCEI.CL" :
+                            formTransform(formTicket.correoElectronico));
+        const construirMaquina = () => (formTransform(formTicket.tipoMaquina) + "-" + formTransform(formTicket.maquina));
+        const construirOficina = () => (
+            formTransform(formTicket.tipoOficina) === "OFICINA"  ? "SRCEI "
+                + formTransform(formTicket.oficina) : "CONSULADO " + formTransform(formTicket.oficina));
+
+        setCorreoExport(construirCorreo());
+        setMaquinaExport(construirMaquina());
+        setOficinaExport(construirOficina());
+
+        sb.appendLine("NOMBRE MAQUINA: " + construirMaquina());
         sb.appendLine("NOMBRE: " + formTransform(formTicket.nombre));
         sb.appendLine("FONO FIJO: " + formTransform(formTicket.fonoFijo));
         sb.appendLine("CELULAR: " + formTransform(formTicket.celular));
         if (formTransform(formTicket.tipoOficina) !== "OFICINA") {
             sb.appendLine("WHATSAPP: " + formTransform(formTicket.whatsapp));
         }
-        sb.appendLine("CORREO ELECTRONICO: " + (
-            formTransform(formTicket.tipoCorreo) === "REGISTROCIVIL"  ? formTransform(formTicket.correoElectronico) + "@REGISTROCIVIL.GOB.CL" :
-                formTransform(formTicket.tipoCorreo) === "CONSULADO" ? formTransform(formTicket.correoElectronico) + "@MINREL.GOB.CL" :
-                    formTransform(formTicket.tipoCorreo) === "MINISTERIO" ? formTransform(formTicket.correoElectronico) + "@MINREL.CL" :
-                        formTransform(formTicket.tipoCorreo) === "SRCEI" ? formTransform(formTicket.correoElectronico) + "@SRCEI.CL" :
-                            formTransform(formTicket.correoElectronico)));
-        sb.appendLine("OFICINA: " + (
-              formTransform(formTicket.tipoOficina) === "OFICINA"  ? "SRCEI "
-            + formTransform(formTicket.oficina) : "CONSULADO " + formTransform(formTicket.oficina)));
+        sb.appendLine("CORREO ELECTRONICO: " + construirCorreo());
+        sb.appendLine("OFICINA: " + construirOficina());
         sb.appendLine("IP: " + formTransform(formTicket.ip));
         sb.appendLine("CUENTA DE USUARIO: " + formTransform(formTicket.cuentaUsuario));
         sb.appendLine("PROBLEMA_PRE-DIAGNOSTICO: " + formTransform(formTicket.problema));
@@ -80,18 +93,33 @@ const TicketForm = () => {
         });
     };
 
+    const setExport = () => {
+        setTicketExport(
+            {
+                nombre: formTransform(ticketFormData.nombre),
+                correo: correoExport,
+                estacion: maquinaExport,
+                numero: formTransform(ticketFormData.celular) + " - " + formTransform(ticketFormData.fonoFijo),
+                responsabilidad: formTransform(ticketFormData.responsabilidad),
+                oficina: oficinaExport
+            }
+        );
+    }
+
     const handleEnding = () => {
-        if (ticketFormData.responsabilidad == "SI") {
+        if (ticketFormData.responsabilidad === "SI") {
+            setExport();
             navigate("/baha-responsible");
         } else {
+            setExport();
             navigate("/baha-summary");
         }
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const ticket = parseTicket(ticketFormData);
-        setTicket(ticket)
+        const tkt = parseTicket(ticketFormData);
+        setTicket(tkt)
     };
 
     return (
@@ -412,7 +440,7 @@ const TicketForm = () => {
                 </div>
             </div>
             <div className="col-md-12 mb-2">
-                <TicketBody text={ticket} title={"TICKET"} setter={setTicket}/>
+                <TicketBody text={ticket} title={"TICKET"} setter={setTicket} rows={15} bootstrapColor="text-bg-primary"/>
             </div>
             <div className="col-md-12 mb-2">
                 <button type="submit"
