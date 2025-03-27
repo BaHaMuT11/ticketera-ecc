@@ -147,6 +147,11 @@ const SrceiForm = () => {
                         </form>
                     </div>
                     <div className="row">
+                        <div className="col-md-12 mt-5">
+                            <p>Correo: soporte@srcei.cl</p>
+                        </div>
+                    </div>
+                    <div className="row">
                         <div className="col-md-12 mt-3">
                             <TicketBody title="Asunto" text={asunto} setter={setAsunto} rows={3} bootstrapColor="text-bg-dark"  />
                         </div>
