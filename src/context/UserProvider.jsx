@@ -8,7 +8,7 @@ export const UserProvider = ({ children }) => {
     const [userName, setUserName] = useState({nombre2: ""});
     const [llamados, setLlamados] = useState([]);
     const [llamadoActivo, setLlamadoActivo] = useState({
-        id: 1,
+        id: 0,
         oficina: "",
         atenciones: []
     });
@@ -16,7 +16,8 @@ export const UserProvider = ({ children }) => {
         id: 1,
         ticket: "",
         funcionario: "",
-        resolucion: ""
+        resolucion: "",
+        responsabilidad: "SI"
     });
 
     return (

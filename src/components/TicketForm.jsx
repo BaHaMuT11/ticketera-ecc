@@ -10,6 +10,8 @@ import {useNavigate} from "react-router";
 const TicketForm = () => {
 
     const {userName} = useContext(UserContext);
+    const {llamadoActivo} = useContext(UserContext);
+    const {setAtencionActiva} = useContext(UserContext);
     const {ticketFormData, setTicketFormData} = useContext(TicketContext);
     const {ticket, setTicket} = useContext(TicketContext);
     const {derivacion, setDerivacion} = useContext(TicketContext);
@@ -112,6 +114,15 @@ const TicketForm = () => {
             navigate("/baha-responsible");
         } else {
             setExport();
+            setAtencionActiva(
+                {
+                    id: (llamadoActivo.atenciones.size)+1,
+                    ticket: "",
+                    funcionario: formTransform(ticketFormData.nombre),
+                    resolucion: formTransform(derivacion),
+                    responsabilidad: "NO"
+                }
+            )
             navigate("/baha-summary");
         }
     }
