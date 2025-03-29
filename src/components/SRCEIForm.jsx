@@ -5,6 +5,7 @@ import {formTransform} from "../utilities/FormTransform.js";
 import {StringBuilder} from "../utilities/StringBuilder.js";
 import {UserContext} from "../context/UserProvider.jsx";
 import {TicketContext} from "../context/TicketProvider.jsx";
+import {useNavigate} from "react-router";
 
 const SrceiForm = () => {
 
@@ -17,6 +18,8 @@ const SrceiForm = () => {
 
     const [asunto, setAsunto] = useState("");
 
+    const navigate = useNavigate();
+
     const handleChange = (e) => {
         const {name,value,type,checked} = e.target;
         setSrceiFormData({
@@ -24,6 +27,10 @@ const SrceiForm = () => {
             [name]: type === "checkbox" ? checked : value,
         });
     };
+
+    const handleEnding = () => {
+        navigate("/baha-summary");
+    }
 
     const parseSrceiTicket = (srceiData) => {
         const defTicketSN = "• Ticket Service Now: " + formTransform(srceiData.nombreTicket);
@@ -159,6 +166,13 @@ const SrceiForm = () => {
                     <div className="row">
                         <div className="col-md-12 mt-3">
                             <TicketBody title="Correo Responsabilidad" text={srceiTicket} setter={setSrceiTicket} rows={18} bootstrapColor="text-bg-dark"  />
+                        </div>
+                        <div className="col-md-12 mb-2 mt-2">
+                            <button type="submit"
+                                    className="btn btn-outline-warning btn-dark btn-lg text-light w-100"
+                                    onClick={handleEnding}>
+                                Continuar
+                            </button>
                         </div>
                     </div>
                 </div>

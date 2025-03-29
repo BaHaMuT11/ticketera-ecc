@@ -1,4 +1,4 @@
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {UserContext} from "../context/UserProvider.jsx";
 import {TicketContext} from "../context/TicketProvider.jsx";
 import {StringBuilder} from "../utilities/StringBuilder.js"
@@ -133,6 +133,20 @@ const TicketForm = () => {
         setTicket(tkt)
     };
 
+    useEffect(() => {
+        if (ticketFormData.tipoOficina === "CONSULADO") {
+            setTicketFormData({...ticketFormData, tipoMaquina: "CON" });
+        }
+    }, [ticketFormData.tipoOficina]);
+
+    useEffect(() => {
+        if (ticketFormData.tipoMaquina === "CON") {
+            setTicketFormData({...ticketFormData, tipoOficina: "CONSULADO" });
+        } else {
+            setTicketFormData({...ticketFormData, tipoOficina: "OFICINA" });
+        }
+    }, [ticketFormData.tipoMaquina]);
+
     return (
         <>
             <div className="col-md-12 mb-2">
@@ -164,7 +178,8 @@ const TicketForm = () => {
                                                    id="consuladoRadio"
                                                    value="CONSULADO"
                                                    checked={ticketFormData.tipoOficina === "CONSULADO"}
-                                                   onChange={handleChange}/>
+                                                   onChange={handleChange}
+                                                    />
                                             <label className="btn btn-outline-primary btn-sm"
                                                    htmlFor="consuladoRadio">Consulado</label>
                                         </div>
@@ -282,7 +297,8 @@ const TicketForm = () => {
 
                                             <input type="radio" className="btn-check" name="tipoMaquina" id="conRadio"
                                                    value="CON" checked={ticketFormData.tipoMaquina === "CON"}
-                                                   onChange={handleChange} required/>
+                                                   onChange={handleChange}
+                                                   required />
                                             <label className="btn btn-outline-primary btn-sm" htmlFor="conRadio"
                                                    title="Consulados">CON</label>
 
@@ -440,10 +456,14 @@ const TicketForm = () => {
                             </div>
 
                             <div className="d-flex justify-content-around">
-                                <button type="submit" className="btn btn-success" onClick={ () => setDerivacion("")}>Resolver sin derivar</button>
-                                <button type="submit" className="btn btn-success">Resolver</button>
-                                <button type="button" className="btn btn-warning" onClick={ () => {setN2Visibility(!n2Visibility); setN3Visibility(false); setRotulo(null); setDireccion(null); setDerivacion("n2");}}>N2 Adm</button>
-                                <button type="button" className="btn btn-warning" onClick={ () => {setN3Visibility(!n3Visibility); setN2Visibility(false); setDerivacion("n3");}}>N3 CECOM</button>
+                                <div className="resolver-sd">
+                                    <button type="submit" className="btn btn-success" onClick={ () => {setDerivacion(""); setN2Visibility(false); setN3Visibility(false)}}>Resolver sin derivar</button>
+                                </div>
+                                <div className="resolver-d">
+                                    <button type="submit" className="btn btn-success">Resolver</button> &nbsp; &nbsp;
+                                    <button type="button" className="btn btn-warning" onClick={ () => {setN2Visibility(!n2Visibility); setN3Visibility(false); setRotulo(null); setDireccion(null); setDerivacion("n2");}}>N2 Adm</button> &nbsp; &nbsp;
+                                    <button type="button" className="btn btn-warning" onClick={ () => {setN3Visibility(!n3Visibility); setN2Visibility(false); setDerivacion("n3");}}>N3 CECOM</button>
+                                </div>
                             </div>
 
                         </form>
