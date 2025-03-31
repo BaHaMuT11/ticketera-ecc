@@ -116,7 +116,7 @@ const TicketForm = () => {
             setExport();
             setAtencionActiva(
                 {
-                    id: (llamadoActivo.atenciones.size)+1,
+                    id: llamadoActivo.atenciones.length+1,
                     ticket: "",
                     funcionario: formTransform(ticketFormData.nombre),
                     resolucion: formTransform(derivacion),
