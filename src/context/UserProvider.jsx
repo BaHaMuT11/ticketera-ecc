@@ -13,11 +13,12 @@ export const UserProvider = ({ children }) => {
         atenciones: []
     });
     const [atencionActiva, setAtencionActiva] = useState({
-        id: 1,
+        id: 0,
         ticket: "",
         funcionario: "",
         resolucion: "",
-        responsabilidad: "SI"
+        responsabilidad: "SI",
+        fecha: null
     });
 
     return (

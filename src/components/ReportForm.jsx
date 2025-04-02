@@ -1,9 +1,8 @@
-import { useContext, useState} from "react";
-import {TicketContext} from "../context/TicketProvider.jsx";
+import {useState} from "react";
+import PropTypes from "prop-types";
 
-const ReportForm = () => {
+const ReportForm = (props) => {
 
-    const {ticketExport} = useContext(TicketContext);
     const [reporte, setReporte] = useState("");
 
     const handleSubmit = (e) => {
@@ -11,7 +10,7 @@ const ReportForm = () => {
     };
 
     return (
-        ticketExport.responsabilidad === "NO" &&
+        props.responsabilidad === "NO" &&
             <div className="card">
                 <div className="card-header text-bg-info d-flex justify-content-between align-items-center">
                     <h5 className="mb-0">Reporte</h5>
@@ -34,5 +33,9 @@ const ReportForm = () => {
             </div>
     );
 };
+
+ReportForm.propTypes = {
+    responsabilidad: PropTypes.string.isRequired,
+}
 
 export default ReportForm;

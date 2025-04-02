@@ -32,7 +32,7 @@ const SummaryChart = () => {
                                         <td>{llamado.oficina}</td>
                                         <td>{atencion.ticket}</td>
                                         <td>{atencion.funcionario}</td>
-                                        <td>{atencion.resolucion === "" ? "RESUELTO" : atencion.resolucion}</td>
+                                        <td>{atencion.resolucion}</td>
                                         <td>{atencion.responsabilidad}</td>
                                         <td>01/01/2025</td>
                                     </tr>

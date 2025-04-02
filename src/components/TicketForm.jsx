@@ -6,12 +6,12 @@ import TicketBody from "./generic/TicketBody.jsx";
 import {formTransform} from "../utilities/FormTransform.js";
 import {isset} from "../utilities/Isset.js";
 import {useNavigate} from "react-router";
+import ReportForm from "./ReportForm.jsx";
 
 const TicketForm = () => {
 
     const {userName} = useContext(UserContext);
-    const {llamadoActivo} = useContext(UserContext);
-    const {setAtencionActiva} = useContext(UserContext);
+    const {llamadoActivo, setLlamadoActivo} = useContext(UserContext);
     const {ticketFormData, setTicketFormData} = useContext(TicketContext);
     const {ticket, setTicket} = useContext(TicketContext);
     const {derivacion, setDerivacion} = useContext(TicketContext);
@@ -108,21 +108,29 @@ const TicketForm = () => {
         );
     }
 
+    const buildAtencionActiva = () => {
+        const resolucionPH = formTransform(ticketFormData.resolucion);
+        setLlamadoActivo({
+            id: llamadoActivo+1,
+            oficina: oficinaExport,
+            atenciones: [...llamadoActivo.atenciones, {
+                id: llamadoActivo.atenciones.length+1,
+                ticket: "",
+                funcionario: formTransform(ticketFormData.nombre),
+                resolucion: resolucionPH === "" ? "RESUELTO" : resolucionPH ,
+                responsabilidad: ticketFormData.responsabilidad,
+                fecha: new Date().toLocaleDateString("es-CL")
+            }]
+        })
+    }
+
     const handleEnding = () => {
         if (ticketFormData.responsabilidad === "SI") {
             setExport();
             navigate("/baha-responsible");
         } else {
             setExport();
-            setAtencionActiva(
-                {
-                    id: llamadoActivo.atenciones.length+1,
-                    ticket: "",
-                    funcionario: formTransform(ticketFormData.nombre),
-                    resolucion: formTransform(derivacion),
-                    responsabilidad: "NO"
-                }
-            )
+            buildAtencionActiva()
             navigate("/baha-summary");
         }
     }
@@ -472,6 +480,9 @@ const TicketForm = () => {
             </div>
             <div className="col-md-12 mb-2">
                 <TicketBody text={ticket} title={"TICKET"} setter={setTicket} rows={15} bootstrapColor="text-bg-primary"/>
+            </div>
+            <div className="col-md-12 mb-2">
+                <ReportForm responsabilidad={ticketFormData.responsabilidad} />
             </div>
             <div className="col-md-12 mb-2">
                 <button type="submit"
