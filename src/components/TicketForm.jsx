@@ -12,8 +12,10 @@ const TicketForm = () => {
 
     const {userName} = useContext(UserContext);
     const {llamadoActivo, setLlamadoActivo} = useContext(UserContext);
+
     const {ticketFormData, setTicketFormData} = useContext(TicketContext);
     const {ticket, setTicket} = useContext(TicketContext);
+    const {reporte} = useContext(TicketContext);
     const {derivacion, setDerivacion} = useContext(TicketContext);
     const {setTicketExport} = useContext(TicketContext);
 
@@ -115,7 +117,7 @@ const TicketForm = () => {
             oficina: oficinaExport,
             atenciones: [...llamadoActivo.atenciones, {
                 id: llamadoActivo.atenciones.length+1,
-                ticket: "",
+                ticket: reporte,
                 funcionario: formTransform(ticketFormData.nombre),
                 resolucion: resolucionPH === "" ? "RESUELTO" : resolucionPH ,
                 responsabilidad: ticketFormData.responsabilidad,

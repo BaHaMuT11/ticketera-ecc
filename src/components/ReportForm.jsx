@@ -1,9 +1,10 @@
-import {useState} from "react";
+import {useContext} from "react";
 import PropTypes from "prop-types";
+import {TicketContext} from "../context/TicketProvider.jsx";
 
 const ReportForm = (props) => {
 
-    const [reporte, setReporte] = useState("");
+    const {reporte, setReporte} = useContext(TicketContext);
 
     const handleSubmit = (e) => {
         e.preventDefault();

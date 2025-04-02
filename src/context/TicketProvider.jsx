@@ -24,6 +24,7 @@ export const TicketProvider = ({ children }) => {
         pruebasMesa: ""
     });
     const [ticket, setTicket] = useState("")
+    const [reporte, setReporte] = useState("");
     const [derivacion, setDerivacion] = useState("")
     const [ticketExport, setTicketExport] = useState({
         nombre: "",
@@ -38,7 +39,8 @@ export const TicketProvider = ({ children }) => {
             ticketFormData, setTicketFormData,
             ticket, setTicket,
             derivacion, setDerivacion,
-            ticketExport, setTicketExport}}>
+            ticketExport, setTicketExport,
+            reporte, setReporte}}>
 
             {children}
         </TicketContext.Provider>
