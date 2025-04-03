@@ -111,7 +111,7 @@ const TicketForm = () => {
     }
 
     const buildAtencionActiva = () => {
-        const resolucionPH = formTransform(ticketFormData.resolucion);
+        const resolucionPH = formTransform(derivacion);
         setLlamadoActivo({
             id: llamadoActivo+1,
             oficina: oficinaExport,
@@ -129,11 +129,12 @@ const TicketForm = () => {
     const handleEnding = () => {
         if (ticketFormData.responsabilidad === "SI") {
             setExport();
+            buildAtencionActiva()
             navigate("/baha-responsible");
         } else {
             setExport();
             buildAtencionActiva()
-            navigate("/baha-summary");
+            navigate("/baha-assistance");
         }
     }
 
