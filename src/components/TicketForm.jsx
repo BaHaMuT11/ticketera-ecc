@@ -12,6 +12,7 @@ const TicketForm = () => {
 
     const {userName} = useContext(UserContext);
     const {llamadoActivo, setLlamadoActivo} = useContext(UserContext);
+    const {llamados} = useContext(UserContext);
 
     const {ticketFormData, setTicketFormData} = useContext(TicketContext);
     const {ticket, setTicket} = useContext(TicketContext);
@@ -113,8 +114,8 @@ const TicketForm = () => {
     const buildAtencionActiva = () => {
         const resolucionPH = formTransform(derivacion);
         setLlamadoActivo({
-            id: llamadoActivo+1,
-            oficina: oficinaExport,
+            id: llamados.length+1,
+            oficina: formTransform(ticketFormData.oficina),
             atenciones: [...llamadoActivo.atenciones, {
                 id: llamadoActivo.atenciones.length+1,
                 ticket: reporte,
@@ -489,7 +490,7 @@ const TicketForm = () => {
             </div>
             <div className="col-md-12 mb-2">
                 <button type="submit"
-                        className="btn btn-outline-warning btn-primary btn-lg text-light w-100"
+                        className="btn btn-primary btn-lg text-light w-100"
                         onClick={handleEnding}>
                     Continuar
                 </button>

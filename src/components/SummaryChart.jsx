@@ -1,10 +1,13 @@
-import {useContext} from "react";
+import {useContext, useEffect} from "react";
 import {UserContext} from "../context/UserProvider.jsx";
 
 const SummaryChart = () => {
 
     const {llamados} = useContext(UserContext);
 
+    useEffect(() => {
+        console.log(llamados);
+    },[])
 
     return (
         <div className="row">
@@ -24,7 +27,7 @@ const SummaryChart = () => {
                     </thead>
                     <tbody className="table-group-divider">
                         {
-                            llamados.map( (llamado) => {
+                            llamados.map( (llamado) => (
                                 llamado.atenciones.map((atencion) => (
                                     <tr key={`${llamado.id}-${atencion.id}`}>
                                         <th scope="row">{llamado.id}</th>
@@ -37,7 +40,7 @@ const SummaryChart = () => {
                                         <td>01/01/2025</td>
                                     </tr>
                                 ))
-                            })
+                            ))
                         }
                     </tbody>
                 </table>

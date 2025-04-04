@@ -25,9 +25,6 @@ const ReportForm = (props) => {
                                        value={reporte}
                                        onChange={e => setReporte(e.target.value)} required />
                             </div>
-                            <div className="d-flex justify-content-center">
-                                <button type="submit" className="btn btn-success">Continuar</button>
-                            </div>
                         </div>
                     </form>
                 </div>
