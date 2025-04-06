@@ -371,22 +371,22 @@ const TicketForm = () => {
                                                    title="Estación de Backoffice Central">BOC</label>
 
                                             <input type="radio" className="btn-check" name="tipoMaquina" id="booRadio"
-                                                   value="BOO" checked={ticketFormData.tipoMaquina === "BOO"}
+                                                   value="EBO" checked={ticketFormData.tipoMaquina === "EBO"}
                                                    onChange={handleChange}/>
                                             <label className="btn btn-outline-primary btn-sm" htmlFor="booRadio"
-                                                   title="Estación BackOffice Tradicional">BOO</label>
+                                                   title="Estación BackOffice Tradicional">EBO</label>
 
                                             <input type="radio" className="btn-check" name="tipoMaquina" id="pcvRadio"
-                                                   value="PCV" checked={ticketFormData.tipoMaquina === "PCV"}
+                                                   value="TEC" checked={ticketFormData.tipoMaquina === "TEC"}
                                                    onChange={handleChange}/>
                                             <label className="btn btn-outline-primary btn-sm" htmlFor="pcvRadio"
-                                                   title="PC Video PV">PCV</label>
+                                                   title="TEC">TEC</label>
 
                                             <input type="radio" className="btn-check" name="tipoMaquina" id="totRadio"
-                                                   value="TOT" checked={ticketFormData.tipoMaquina === "TOT"}
+                                                   value="TEM" checked={ticketFormData.tipoMaquina === "TEM"}
                                                    onChange={handleChange}/>
                                             <label className="btn btn-outline-primary btn-sm" htmlFor="totRadio"
-                                                   title="Totem Dispensador">TOT</label>
+                                                   title="TEM">TEM</label>
                                         </div>
                                     </label>
                                     <input type="text" className="form-control form-control-sm" id="maquina"

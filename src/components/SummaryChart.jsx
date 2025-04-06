@@ -1,36 +1,141 @@
 import {useContext} from "react";
 import {UserContext} from "../context/UserProvider.jsx";
 import {useNavigate} from "react-router";
-import * as XLSX from "xlsx";
+import {TicketContext} from "../context/TicketProvider.jsx";
+import {ResposibilityContext} from "../context/ResponsibilityProvider.jsx";
 
 const SummaryChart = () => {
 
     const {llamados, setLlamados} = useContext(UserContext);
-    const {llamadoActivo, setLlamadoActivo} = useContext(UserContext);
+    const {setLlamadoActivo} = useContext(UserContext);
     const {setEsLlamadoNuevo} = useContext(UserContext);
-    const {userName} = useContext(UserContext);
+    const {setIdLLamadoActiva} = useContext(UserContext);
 
+    const {ticketFormData, setTicketFormData} = useContext(TicketContext);
+    const {setReporte} = useContext(TicketContext);
+    const {setTicket} = useContext(TicketContext);
+
+    const {setSrceiTicket} = useContext(ResposibilityContext);
+    const {srceiFormData, setSrceiFormData} = useContext(ResposibilityContext)
 
     const navigate = useNavigate();
 
+    const limpiarDatos = (accion) => {
+        if (accion === "limpiarAtencion") {
+            setEsLlamadoNuevo(false);
+            setTicketFormData({
+                ...ticketFormData,
+                problema: "",
+                pruebasMesa: "",
+                responsabilidad: "NO"
+            });
+            setTicket("");
+            setSrceiTicket("");
+            setSrceiFormData({
+                ...srceiFormData,
+                nombreTicket: "",
+                servicio: "Impresoras",
+                sintoma: "",
+                diagnostico: "",
+                otros: "",
+                region: "",
+                taxonomia: ""
+            });
+            setReporte("");
+        }
+        if (accion === "limpiarLlamado") {
+            setTicket("");
+            setSrceiTicket("");
+            setEsLlamadoNuevo(true);
+            setTicketFormData({
+                ...ticketFormData,
+                nombre: "",
+                tipoOficina: "OFICINA",
+                oficina: "",
+                whatsapp: "",
+                problema: "",
+                celular: "",
+                correoElectronico: "",
+                tipoCorreo: "REGISTROCIVIL",
+                fonoFijo: "",
+                ip: "164.96.",
+                cuentaUsuario: "",
+                maquina: "",
+                tipoMaquina: "ETF",
+                responsabilidad: "NO",
+                pruebasMesa: ""
+            });
+            setSrceiFormData({
+                ...srceiFormData,
+                nombreTicket: "",
+                servicio: "Impresoras",
+                sintoma: "",
+                diagnostico: "",
+                otros: "",
+                region: "",
+                taxonomia: ""
+            });
+            setLlamadoActivo(() => ({
+                oficina: "",
+                atenciones: []
+            }));
+            setReporte("");
+        }
+        if (accion === "cerrarDia") {
+            setTicket("");
+            setSrceiTicket("");
+            setTicketFormData({
+                ...ticketFormData,
+                nombre: "",
+                tipoOficina: "OFICINA",
+                oficina: "",
+                whatsapp: "",
+                problema: "",
+                celular: "",
+                correoElectronico: "",
+                tipoCorreo: "REGISTROCIVIL",
+                fonoFijo: "",
+                ip: "164.96.",
+                cuentaUsuario: "",
+                maquina: "",
+                tipoMaquina: "ETF",
+                responsabilidad: "NO",
+                pruebasMesa: ""
+            });
+            setSrceiFormData({
+                ...srceiFormData,
+                nombreTicket: "",
+                servicio: "Impresoras",
+                sintoma: "",
+                diagnostico: "",
+                otros: "",
+                region: "",
+                taxonomia: ""
+            });
+            setReporte("");
+            setLlamados([]);
+            setLlamadoActivo({
+                id: 0,
+                oficina: "",
+                atenciones: []
+            });
+            setIdLLamadoActiva(-1)
+            setEsLlamadoNuevo(true)
+        }
+    }
+
     const handleNuevaAtencion = () => {
-        setEsLlamadoNuevo(false);
+        limpiarDatos("limpiarAtencion")
         navigate("/baha-ticket");
     };
 
     const handleNuevoLlamado = () => {
-        setEsLlamadoNuevo(true);
-        setLlamadoActivo(() => ({
-            oficina: "",
-            atenciones: []
-        }));
-
+        limpiarDatos("limpiarLlamado");
         navigate("/baha-ticket");
     };
 
-
     const handleCerrarDia = () => {
-
+        /*
         const nuevosLlamados = [...llamados, llamadoActivo];
 
 
@@ -40,11 +145,12 @@ const SummaryChart = () => {
 
 
         exportarLlamadosAExcel(nuevosLlamados);
-
-
+        */
+        limpiarDatos("cerrarDia");
         navigate("/");
     };
 
+    /*
     const exportarLlamadosAExcel = (llamadosAExportar) => {
         const dataForExcel = llamadosAExportar.flatMap((llamado) =>
             llamado.atenciones.map((atencion) => ({
@@ -92,6 +198,7 @@ const SummaryChart = () => {
             console.log("No hay datos para exportar");
         }
     };
+    */
 
     return (
         <div className="row">
@@ -121,7 +228,7 @@ const SummaryChart = () => {
                                         <td>{atencion.funcionario}</td>
                                         <td>{atencion.resolucion}</td>
                                         <td>{atencion.responsabilidad}</td>
-                                        <td>01/01/2025</td>
+                                        <td>{atencion.fecha}</td>
                                     </tr>
                                 ))
                             ))
@@ -132,10 +239,10 @@ const SummaryChart = () => {
             <div className="col-md-12 mb-2 d-flex justify-content-around">
                 <button type="submit"
                         className="btn btn-info btn-lg text-light w-100"
-                        onClick={handleNuevaAtencion}>Nueva atención</button> &nbsp; &nbsp;
+                        onClick={handleNuevaAtencion}>Nueva atención</button> &nbsp; &nbsp; &nbsp;
                 <button type="submit"
                         className="btn btn-info btn-lg text-light w-100"
-                        onClick={handleNuevoLlamado}>Nuevo llamado</button> &nbsp; &nbsp;
+                        onClick={handleNuevoLlamado}>Nuevo llamado</button> &nbsp; &nbsp; &nbsp;
                 <button type="submit"
                         className="btn btn-danger btn-lg text-light w-100"
                         onClick={handleCerrarDia}>Cerrar día</button>
