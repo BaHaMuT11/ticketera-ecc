@@ -4,7 +4,7 @@ import {TicketContext} from "../context/TicketProvider.jsx";
 import {StringBuilder} from "../utilities/StringBuilder.js"
 import TicketBody from "./generic/TicketBody.jsx";
 import {formTransform} from "../utilities/FormTransform.js";
-import {isset} from "../utilities/Isset.js";
+import {variableUtils, isValidString} from "../utilities/VariableUtils.js";
 import {useNavigate} from "react-router";
 import ReportForm from "./ReportForm.jsx";
 
@@ -13,10 +13,12 @@ const TicketForm = () => {
     const {userName} = useContext(UserContext);
     const {llamadoActivo, setLlamadoActivo} = useContext(UserContext);
     const {llamados} = useContext(UserContext);
+    const {esLlamadoNuevo} = useContext(UserContext);
+    const {idLLamadoActiva} = useContext(UserContext);
 
     const {ticketFormData, setTicketFormData} = useContext(TicketContext);
     const {ticket, setTicket} = useContext(TicketContext);
-    const {reporte} = useContext(TicketContext);
+    const {reporte, setReporte} = useContext(TicketContext);
     const {derivacion, setDerivacion} = useContext(TicketContext);
     const {setTicketExport} = useContext(TicketContext);
 
@@ -69,20 +71,20 @@ const TicketForm = () => {
         sb.appendLine("PRUEBAS DE LA MESA: " + formTransform(formTicket.pruebasMesa));
 
         if (derivacion === "n2") {
-            if (isset(horario)) {
+            if (variableUtils(horario)) {
                 sb.appendLine("DIAS Y HORARIO DE CHILE: " + formTransform(horario));
             }
         }
 
         if (derivacion === "n3") {
             sb.appendLine("FALLA FISICA HW: " + formTransform(fallaFisica));
-            if (isset(direccion)) {
+            if (variableUtils(direccion)) {
                 sb.appendLine("DIRECCION: " + formTransform(direccion));
             }
-            if (isset(horario)) {
+            if (variableUtils(horario)) {
                 sb.appendLine("DIAS Y HORARIO DE OFICINA: " + formTransform(horario));
             }
-            if (isset(rotulo)) {
+            if (variableUtils(rotulo)) {
                 sb.appendLine("ROTULO: " + formTransform(rotulo));
             }
         }
@@ -106,38 +108,61 @@ const TicketForm = () => {
                 estacion: maquinaExport,
                 numero: formTransform(ticketFormData.celular) + " - " + formTransform(ticketFormData.fonoFijo),
                 responsabilidad: formTransform(ticketFormData.responsabilidad),
-                oficina: oficinaExport
+                oficina: oficinaExport,
+                derivacion: formTransform(derivacion)
             }
         );
     }
 
     const buildAtencionActiva = () => {
         const resolucionPH = formTransform(derivacion);
-        setLlamadoActivo({
-            id: llamados.length+1,
-            oficina: formTransform(ticketFormData.oficina),
-            atenciones: [...llamadoActivo.atenciones, {
-                id: llamadoActivo.atenciones.length+1,
-                ticket: reporte,
-                funcionario: formTransform(ticketFormData.nombre),
-                resolucion: resolucionPH === "" ? "RESUELTO" : resolucionPH ,
-                responsabilidad: ticketFormData.responsabilidad,
-                fecha: new Date().toLocaleString("es-CL", {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: false
-                })
-            }]
-        })
+
+        if (esLlamadoNuevo) {
+            setLlamadoActivo({
+                id: llamados.length+1,
+                oficina: formTransform(ticketFormData.oficina),
+                atenciones: [...llamadoActivo.atenciones, {
+                    id: llamadoActivo.atenciones.length+1,
+                    ticket: reporte,
+                    funcionario: formTransform(ticketFormData.nombre),
+                    resolucion: resolucionPH === "" ? "RESUELTO" : resolucionPH ,
+                    responsabilidad: ticketFormData.responsabilidad,
+                    fecha: new Date().toLocaleString("es-CL", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: false
+                    })
+                }]
+            })
+        } else {
+            setLlamadoActivo({
+                id: idLLamadoActiva,
+                oficina: formTransform(ticketFormData.oficina),
+                atenciones: [...llamadoActivo.atenciones, {
+                    id: llamadoActivo.atenciones.length+1,
+                    ticket: reporte,
+                    funcionario: formTransform(ticketFormData.nombre),
+                    resolucion: resolucionPH === "" ? "RESUELTO" : resolucionPH ,
+                    responsabilidad: ticketFormData.responsabilidad,
+                    fecha: new Date().toLocaleString("es-CL", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: false
+                    })
+                }]
+            })
+        }
     }
 
     const handleEnding = () => {
         if (ticketFormData.responsabilidad === "SI") {
             setExport();
-            buildAtencionActiva()
             navigate("/baha-responsible");
         } else {
             setExport();
@@ -374,13 +399,13 @@ const TicketForm = () => {
                                         <input type="radio" className="form-check-input" name="responsabilidad"
                                                id="responsabilidadSi"
                                                value="SI" checked={ticketFormData.responsabilidad === "SI"}
-                                               onChange={handleChange} required/>
+                                               onChange={handleChange} onClick={()=>setReporte("x")} required/>
                                         <label htmlFor="responsabilidadSi" className="form-check-label">Sí</label>
                                         <input type="radio" className="form-check-input" name="responsabilidad"
                                                id="responsabilidadNo"
                                                value="NO"
                                                checked={ticketFormData.responsabilidad === "NO"}
-                                               onChange={handleChange} required/>
+                                               onChange={handleChange} onClick={()=>setReporte("")}  required/>
                                         <label htmlFor="responsabilidadNo" className="form-check-label">No</label>
                                     </div>
                                 </div>
@@ -493,14 +518,26 @@ const TicketForm = () => {
                 <TicketBody text={ticket} title={"TICKET"} setter={setTicket} rows={15} bootstrapColor="text-bg-primary"/>
             </div>
             <div className="col-md-12 mb-2">
-                <ReportForm responsabilidad={ticketFormData.responsabilidad} />
+                {
+                    ticketFormData.responsabilidad === "NO" &&
+                    <ReportForm responsabilidad={ticketFormData.responsabilidad} />
+                }
+
             </div>
             <div className="col-md-12 mb-2">
-                <button type="submit"
-                        className="btn btn-primary btn-lg text-light w-100"
-                        onClick={handleEnding}>
-                    Continuar
-                </button>
+                {
+                    isValidString(reporte) ?
+                        <button type="submit"
+                                className="btn btn-primary btn-lg text-light w-100"
+                                onClick={handleEnding}>
+                            Continuar
+                        </button> :
+                        <button type="submit"
+                                className="btn btn-primary btn-lg text-light w-100"
+                                onClick={handleEnding} disabled>
+                            Continuar
+                        </button>
+                }
             </div>
         </>
     );

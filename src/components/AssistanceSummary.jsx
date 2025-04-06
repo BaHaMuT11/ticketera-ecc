@@ -7,11 +7,22 @@ const AssistanceSummary = () => {
 
     const {llamadoActivo} = useContext(UserContext);
     const {llamados, setLlamados} = useContext(UserContext);
+    const {esLlamadoNuevo} = useContext(UserContext);
+    const {idLLamadoActiva, setIdLLamadoActiva} = useContext(UserContext);
 
     const navigate = useNavigate();
 
     const handleEnding = () => {
-        setLlamados([...llamados, llamadoActivo]);
+        if (esLlamadoNuevo){
+            setIdLLamadoActiva(llamadoActivo.id);
+            setLlamados([...llamados, llamadoActivo]);
+        } else {
+            let respaldo = llamados.map(llamado => ({ ...llamado }));
+            respaldo = respaldo.map(llamado =>
+                llamado.id === idLLamadoActiva ? llamadoActivo : llamado
+            );
+            setLlamados(respaldo);
+        }
         navigate("/baha-summary");
     }
 

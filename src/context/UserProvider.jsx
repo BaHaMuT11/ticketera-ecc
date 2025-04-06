@@ -12,21 +12,16 @@ export const UserProvider = ({ children }) => {
         oficina: "",
         atenciones: []
     });
-    const [atencionActiva, setAtencionActiva] = useState({
-        id: 0,
-        ticket: "",
-        funcionario: "",
-        resolucion: "",
-        responsabilidad: "SI",
-        fecha: null
-    });
+    const [esLlamadoNuevo, setEsLlamadoNuevo] = useState(true);
+    const [idLLamadoActiva, setIdLLamadoActiva] = useState(-1);
 
     return (
         <UserContext.Provider value={{
             userName, setUserName,
             llamados, setLlamados,
-            atencionActiva, setAtencionActiva,
-            llamadoActivo, setLlamadoActivo}}>
+            llamadoActivo, setLlamadoActivo,
+            esLlamadoNuevo, setEsLlamadoNuevo,
+            idLLamadoActiva, setIdLLamadoActiva}}>
 
             {children}
         </UserContext.Provider>

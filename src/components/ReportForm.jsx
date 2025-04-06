@@ -13,7 +13,7 @@ const ReportForm = (props) => {
     return (
         props.responsabilidad === "NO" &&
             <div className="card">
-                <div className="card-header text-bg-info d-flex justify-content-between align-items-center">
+                <div className="card-header text-bg-primary d-flex justify-content-between align-items-center">
                     <h5 className="mb-0">Reporte</h5>
                 </div>
                 <div className="card-body">

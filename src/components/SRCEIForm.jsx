@@ -6,15 +6,21 @@ import {StringBuilder} from "../utilities/StringBuilder.js";
 import {UserContext} from "../context/UserProvider.jsx";
 import {TicketContext} from "../context/TicketProvider.jsx";
 import {useNavigate} from "react-router";
+import {isValidString} from "../utilities/VariableUtils.js";
 
 const SrceiForm = () => {
 
     const {userName} = useContext(UserContext);
+    const {llamadoActivo, setLlamadoActivo} = useContext(UserContext);
+    const {llamados} = useContext(UserContext);
+    const {esLlamadoNuevo} = useContext(UserContext);
+    const {idLLamadoActiva} = useContext(UserContext);
 
     const {srceiFormData, setSrceiFormData} = useContext(ResposibilityContext)
     const {srceiTicket, setSrceiTicket} = useContext(ResposibilityContext);
 
     const {ticketExport} = useContext(TicketContext);
+    const {ticketFormData} = useContext(TicketContext);
 
     const [asunto, setAsunto] = useState("");
 
@@ -28,8 +34,55 @@ const SrceiForm = () => {
         });
     };
 
+    const buildAtencionActiva = () => {
+        const resolucionPH = ticketExport.derivacion;
+
+        if (esLlamadoNuevo) {
+            setLlamadoActivo({
+                id: llamados.length+1,
+                oficina: formTransform(ticketFormData.oficina),
+                atenciones: [...llamadoActivo.atenciones, {
+                    id: llamadoActivo.atenciones.length+1,
+                    ticket: formTransform(srceiFormData.nombreTicket),
+                    funcionario: formTransform(ticketFormData.nombre),
+                    resolucion: resolucionPH === "" ? "RESUELTO" : resolucionPH ,
+                    responsabilidad: ticketFormData.responsabilidad,
+                    fecha: new Date().toLocaleString("es-CL", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: false
+                    })
+                }]
+            })
+        } else {
+            setLlamadoActivo({
+                id: idLLamadoActiva,
+                oficina: formTransform(ticketFormData.oficina),
+                atenciones: [...llamadoActivo.atenciones, {
+                    id: llamadoActivo.atenciones.length+1,
+                    ticket: formTransform(srceiFormData.nombreTicket),
+                    funcionario: formTransform(ticketFormData.nombre),
+                    resolucion: resolucionPH === "" ? "RESUELTO" : resolucionPH ,
+                    responsabilidad: ticketFormData.responsabilidad,
+                    fecha: new Date().toLocaleString("es-CL", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: false
+                    })
+                }]
+            })
+        }
+    }
+
     const handleEnding = () => {
-        navigate("/baha-summary");
+        buildAtencionActiva();
+        navigate("/baha-assistance");
     }
 
     const parseSrceiTicket = (srceiData) => {
@@ -86,7 +139,7 @@ const SrceiForm = () => {
         e.preventDefault();
         const ticket = parseSrceiTicket(srceiFormData);
         setSrceiTicket(ticket);
-        setAsunto(clasificarServicio(srceiFormData.servicio)+ " - " + formTransform(srceiFormData.taxonomia) + " - " + formTransform(srceiFormData.region));
+        setAsunto(clasificarServicio(srceiFormData.servicio)+ " - " + formTransform(srceiFormData.region) + " - " + formTransform(srceiFormData.taxonomia));
     }
 
     return (
@@ -168,11 +221,19 @@ const SrceiForm = () => {
                             <TicketBody title="Correo Responsabilidad" text={srceiTicket} setter={setSrceiTicket} rows={18} bootstrapColor="text-bg-dark"  />
                         </div>
                         <div className="col-md-12 mb-2 mt-2">
-                            <button type="submit"
-                                    className="btn btn-outline-warning btn-dark btn-lg text-light w-100"
-                                    onClick={handleEnding}>
-                                Continuar
-                            </button>
+                            {
+                                isValidString(srceiFormData.nombreTicket) ?
+                                    <button type="submit"
+                                            className="btn btn-dark btn-lg text-light w-100"
+                                            onClick={handleEnding}>
+                                        Continuar
+                                    </button> :
+                                    <button type="submit"
+                                            className="btn btn-dark btn-lg text-light w-100"
+                                            onClick={handleEnding} disabled>
+                                        Continuar
+                                    </button>
+                            }
                         </div>
                     </div>
                 </div>

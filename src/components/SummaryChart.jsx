@@ -1,4 +1,4 @@
-import {useContext, useEffect} from "react";
+import {useContext} from "react";
 import {UserContext} from "../context/UserProvider.jsx";
 import {useNavigate} from "react-router";
 import * as XLSX from "xlsx";
@@ -6,17 +6,21 @@ import * as XLSX from "xlsx";
 const SummaryChart = () => {
 
     const {llamados, setLlamados} = useContext(UserContext);
-    const {setLlamadoActivo} = useContext(UserContext);
+    const {llamadoActivo, setLlamadoActivo} = useContext(UserContext);
+    const {setEsLlamadoNuevo} = useContext(UserContext);
+    const {userName} = useContext(UserContext);
+
 
     const navigate = useNavigate();
 
     const handleNuevaAtencion = () => {
+        setEsLlamadoNuevo(false);
         navigate("/baha-ticket");
     };
 
     const handleNuevoLlamado = () => {
+        setEsLlamadoNuevo(true);
         setLlamadoActivo(() => ({
-            id: llamados.length + 1,
             oficina: "",
             atenciones: []
         }));
@@ -25,45 +29,69 @@ const SummaryChart = () => {
     };
 
 
-
-
     const handleCerrarDia = () => {
 
-        const dataForExcel = llamados.flatMap((llamado) =>
-            llamado.atenciones.map((atencion) => ({
-                ID_Llamado: llamado.id,
-                ID_Atención: atencion.id,
-                Oficina: llamado.oficina,
-                Ticket: atencion.ticket,
-                Funcionario: atencion.funcionario,
-                Resolución: atencion.resolucion,
-                Responsabilidad: atencion.responsabilidad,
-                Fecha: atencion.fecha
-            }))
-        );
+        const nuevosLlamados = [...llamados, llamadoActivo];
 
 
-        const worksheet = XLSX.utils.json_to_sheet(dataForExcel);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Resumen");
+        setEsLlamadoNuevo(true);
+        setLlamados(nuevosLlamados);
+        setLlamadoActivo({ id: 0, oficina: "", atenciones: [] });
 
 
-        XLSX.writeFile(workbook, `reporte_llamados_${new Date().toLocaleDateString("es-CL")}.xlsx`);
+        exportarLlamadosAExcel(nuevosLlamados);
 
-
-        setLlamados([]);
-        setLlamadoActivo({
-            id: 0,
-            oficina: "",
-            atenciones: []
-        });
 
         navigate("/");
     };
 
-    useEffect(() => {
-        console.log(llamados);
-    },[])
+    const exportarLlamadosAExcel = (llamadosAExportar) => {
+        const dataForExcel = llamadosAExportar.flatMap((llamado) =>
+            llamado.atenciones.map((atencion) => ({
+                "ID de Llamado": llamado.id,
+                "ID de Atención": atencion.id,
+                "Oficina": llamado.oficina,
+                "Ticket": atencion.ticket,
+                "Funcionario": atencion.funcionario,
+                "Resolución": atencion.resolucion,
+                "Responsabilidad": atencion.responsabilidad,
+                "Fecha": atencion.fecha
+            }))
+        );
+
+        if (dataForExcel.length > 0) {
+            const worksheet = XLSX.utils.json_to_sheet(dataForExcel);
+
+            worksheet["A1"] = { t: "s", v: "Llamadas de " + userName.nombre2 };
+            worksheet["A1"].s = {
+                alignment: { horizontal: "center", vertical: "center" },
+                font: { bold: true, sz: 14 }
+            };
+            worksheet["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 7 } }];
+
+            const headers = [
+                "ID de Llamado",
+                "ID de Atención",
+                "Oficina",
+                "Ticket",
+                "Funcionario",
+                "Resolución",
+                "Responsabilidad",
+                "Fecha"
+            ];
+
+            headers.forEach((header, index) => {
+                worksheet[XLSX.utils.encode_cell({ r: 1, c: index })] = { t: "s", v: header };
+            });
+
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Resumen");
+
+            XLSX.writeFile(workbook, `reporte_llamados_${new Date().toLocaleDateString("es-CL")}.xlsx`);
+        } else {
+            console.log("No hay datos para exportar");
+        }
+    };
 
     return (
         <div className="row">
