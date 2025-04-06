@@ -122,7 +122,14 @@ const TicketForm = () => {
                 funcionario: formTransform(ticketFormData.nombre),
                 resolucion: resolucionPH === "" ? "RESUELTO" : resolucionPH ,
                 responsabilidad: ticketFormData.responsabilidad,
-                fecha: new Date().toLocaleDateString("es-CL")
+                fecha: new Date().toLocaleString("es-CL", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false
+                })
             }]
         })
     }
