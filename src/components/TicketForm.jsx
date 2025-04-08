@@ -4,7 +4,7 @@ import {TicketContext} from "../context/TicketProvider.jsx";
 import {StringBuilder} from "../utilities/StringBuilder.js"
 import TicketBody from "./generic/TicketBody.jsx";
 import {formTransform} from "../utilities/FormTransform.js";
-import {variableUtils, isValidString} from "../utilities/VariableUtils.js";
+import {isValidString, variableUtils} from "../utilities/VariableUtils.js";
 import {useNavigate} from "react-router";
 import ReportForm from "./ReportForm.jsx";
 
@@ -15,6 +15,7 @@ const TicketForm = () => {
     const {llamados} = useContext(UserContext);
     const {esLlamadoNuevo} = useContext(UserContext);
     const {idLLamadoActiva} = useContext(UserContext);
+    const {inventario} = useContext(UserContext);
 
     const {ticketFormData, setTicketFormData} = useContext(TicketContext);
     const {ticket, setTicket} = useContext(TicketContext);
@@ -35,6 +36,20 @@ const TicketForm = () => {
     const[correoExport, setCorreoExport] = useState("");
     const[maquinaExport, setMaquinaExport] = useState("");
     const[oficinaExport, setOficinaExport] = useState("");
+
+    const extraerCodigoMaquina = (cadena) => {
+        const [, despues] = cadena.split("-");
+        return despues || null;
+    }
+
+    const buscarMaquinaPorIP = (ip) => {
+        return inventario.find(item => formTransform(item.ip) === formTransform(ip));
+    }
+
+    const buscarMaquinaPorMaquina = (maquina) => {
+        return inventario.find(item => formTransform(item.nombre) === maquina)
+    }
+
 
     const parseTicket = (formTicket) => {
 
@@ -169,6 +184,23 @@ const TicketForm = () => {
             buildAtencionActiva()
             navigate("/baha-assistance");
         }
+    }
+
+    const validarDesdeMaquina = () => {
+        const maquina = (formTransform(ticketFormData.tipoMaquina) + "-" + formTransform(ticketFormData.maquina))
+        console.log(maquina);
+        const resultado = buscarMaquinaPorMaquina(maquina);
+
+        setTicketFormData({...ticketFormData, ip: formTransform(resultado.ip) });
+    }
+
+    const validarDesdeIp = () => {
+        const resultado = buscarMaquinaPorIP(ticketFormData.ip)
+
+        const tipo = resultado.acronimo;
+        const codigo = extraerCodigoMaquina(resultado.nombre);
+
+        setTicketFormData({...ticketFormData, tipoMaquina: formTransform(tipo), maquina: formTransform(codigo)});
     }
 
     const handleSubmit = (e) => {
@@ -316,8 +348,13 @@ const TicketForm = () => {
 
                                 <div className="col-md-6 mb-3">
                                     <label htmlFor="ip" className="form-label">IP</label>
-                                    <input type="text" className="form-control form-control-sm" id="ip" name="ip"
-                                           value={ticketFormData.ip} onChange={handleChange} required/>
+                                    <div className="d-flex">
+                                        <input type="text" className="form-control form-control-sm" id="ip" name="ip"
+                                               value={ticketFormData.ip} onChange={handleChange} required/> &nbsp;
+                                        <button className="boton-verde-sm" type="button" onClick={validarDesdeIp} >
+                                            <i className="bi bi-check-lg"></i>
+                                        </button>
+                                    </div>
                                 </div>
 
                             </div>
@@ -395,9 +432,15 @@ const TicketForm = () => {
                                                    title="TEM">TEM</label>
                                         </div>
                                     </label>
-                                    <input type="text" className="form-control form-control-sm" id="maquina"
-                                           name="maquina"
-                                           value={ticketFormData.maquina} onChange={handleChange} required/>
+                                    <div className="d-flex">
+                                        <input type="text" className="form-control form-control-sm" id="maquina"
+                                               name="maquina"
+                                               value={ticketFormData.maquina} onChange={handleChange} required/> &nbsp;
+                                        <button className="boton-verde-sm" type="button" onClick={validarDesdeMaquina}>
+                                            <i className="bi bi-check-lg"></i>
+                                        </button>
+                                    </div>
+                                    <p>Nombre de máquina: <span className="nombre-maquina">{ isValidString(ticketFormData.maquina) ? (formTransform(ticketFormData.tipoMaquina) + "-" + formTransform(ticketFormData.maquina)): "No disponible aún"}</span></p>
                                 </div>
                                 <div className="col-md-6 mb-3">
                                     <label className="form-label">Es de responsabilidad del SRCeI?</label>

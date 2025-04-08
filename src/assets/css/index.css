@@ -1,1 +1,18 @@
+.boton-verde-sm {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    padding: 4px 6px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
 
+.boton-verde-sm:hover {
+    background-color: #219150;
+}
+
+.nombre-maquina {
+    color: blue;
+}

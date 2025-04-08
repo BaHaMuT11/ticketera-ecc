@@ -1,11 +1,14 @@
-import {useContext} from "react";
+import {useContext, useEffect} from "react";
 import {UserContext} from "../context/UserProvider.jsx";
 import {useNavigate} from "react-router";
+import axios from "axios";
 
 
 const UserForm = () => {
 
     const {userName, setUserName} = useContext(UserContext);
+    const {setInventario} = useContext(UserContext);
+
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -20,6 +23,16 @@ const UserForm = () => {
         e.preventDefault();
         navigate("/baha-ticket");
     };
+
+    useEffect(() => {
+        axios.get("https://bahamut11.github.io/logical-Inventory/inventario.json")
+            .then(response => {
+                setInventario(response.data);
+            })
+            .catch(error => {
+                console.error('Error al cargar el inventario:', error);
+            });
+    }, []);
 
     return (
         <div className="col-md-12">

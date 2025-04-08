@@ -14,6 +14,7 @@ export const UserProvider = ({ children }) => {
     });
     const [esLlamadoNuevo, setEsLlamadoNuevo] = useState(true);
     const [idLLamadoActiva, setIdLLamadoActiva] = useState(-1);
+    const [inventario, setInventario] = useState([]);
 
     return (
         <UserContext.Provider value={{
@@ -21,7 +22,8 @@ export const UserProvider = ({ children }) => {
             llamados, setLlamados,
             llamadoActivo, setLlamadoActivo,
             esLlamadoNuevo, setEsLlamadoNuevo,
-            idLLamadoActiva, setIdLLamadoActiva}}>
+            idLLamadoActiva, setIdLLamadoActiva,
+            inventario, setInventario}}>
 
             {children}
         </UserContext.Provider>
