@@ -376,6 +376,12 @@ const TicketForm = () => {
                                             <label className="btn btn-outline-primary btn-sm" htmlFor="booRadio"
                                                    title="Estación BackOffice Tradicional">EBO</label>
 
+                                            <input type="radio" className="btn-check" name="tipoMaquina" id="tabRadio"
+                                                   value="TAB" checked={ticketFormData.tipoMaquina === "TAB"}
+                                                   onChange={handleChange}/>
+                                            <label className="btn btn-outline-primary btn-sm" htmlFor="tabRadio"
+                                                   title="Tablet">TAB</label>
+
                                             <input type="radio" className="btn-check" name="tipoMaquina" id="pcvRadio"
                                                    value="TEC" checked={ticketFormData.tipoMaquina === "TEC"}
                                                    onChange={handleChange}/>
