@@ -567,9 +567,28 @@ const TicketForm = () => {
                 <TicketBody text={ticket} title={"TICKET"} setter={setTicket} rows={15} bootstrapColor="text-bg-primary"/>
             </div>
             <div className="col-md-12 mb-2">
+                <div className="d-flex justify-content-center gap-3 flex-wrap">
+                    <button type="button" className="btn btn-outline-primary btn-round" title="Oficio">
+                        <i className="bi bi-file-earmark-text"></i>
+                    </button>
+                    <button type="button" className="btn btn-outline-warning btn-round" title="Oficio Corregido">
+                        <i className="bi bi-pencil-square"></i>
+                    </button>
+                    <button type="button" className="btn btn-outline-success btn-round" title="Término de Tarea">
+                        <i className="bi bi-check-circle"></i>
+                    </button>
+                    <button type="button" className="btn btn-outline-info btn-round" title="Despachar Solicitud">
+                        <i className="bi bi-send"></i>
+                    </button>
+                    <button type="button" className="btn btn-outline-dark btn-round" title="Cuadratura de Caja">
+                        <i className="bi bi-cash-stack"></i>
+                    </button>
+                </div>
+            </div>
+            <div className="col-md-12 mb-2">
                 {
                     ticketFormData.responsabilidad === "NO" &&
-                    <ReportForm responsabilidad={ticketFormData.responsabilidad} />
+                    <ReportForm responsabilidad={ticketFormData.responsabilidad}/>
                 }
 
             </div>
