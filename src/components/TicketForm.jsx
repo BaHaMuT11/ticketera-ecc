@@ -35,6 +35,8 @@ const TicketForm = () => {
     const [direccion, setDireccion] = useState(null);
     const [rotulo, setRotulo] = useState(null);
     const [fallaFisica, setFallaFisica] = useState("NO");
+    const [correo, setCorreo] = useState("");
+    const [tipoCorreo, setTipoCorreo] = useState("REGISTROCIVIL");
 
     const [correoExport, setCorreoExport] = useState("");
     const [maquinaExport, setMaquinaExport] = useState("");
@@ -43,6 +45,8 @@ const TicketForm = () => {
     const [showModal, setShowModal] = useState(false);
     const [title, setTitle] = useState("");
     const [formComponent, setFormComponent] = useState(null);
+
+    const [lugar, setLugar] = useState("");
 
 
     const extraerCodigoMaquina = (cadena) => {
@@ -62,16 +66,16 @@ const TicketForm = () => {
 
     const parseTicket = (formTicket) => {
 
-        const defTipoEstacion = "TIPO ESTACION: " + formTransform(formTicket.tipoMaquina);
+        const defTipoEstacion = (formTransform(formTicket.tipoMaquina) === "SI" ? "TIPO ESTACION: S/I" : "TIPO ESTACION: " + formTransform(formTicket.tipoMaquina));
         const sb = new StringBuilder(defTipoEstacion);
 
         const construirCorreo = () => (
-            formTransform(formTicket.tipoCorreo) === "REGISTROCIVIL"  ? formTransform(formTicket.correoElectronico) + "@REGISTROCIVIL.GOB.CL" :
-                formTransform(formTicket.tipoCorreo) === "CONSULADO" ? formTransform(formTicket.correoElectronico) + "@MINREL.GOB.CL" :
-                    formTransform(formTicket.tipoCorreo) === "MINISTERIO" ? formTransform(formTicket.correoElectronico) + "@MINREL.CL" :
-                        formTransform(formTicket.tipoCorreo) === "SRCEI" ? formTransform(formTicket.correoElectronico) + "@SRCEI.CL" :
-                            formTransform(formTicket.correoElectronico));
-        const construirMaquina = () => (formTransform(formTicket.tipoMaquina) + "-" + formTransform(formTicket.maquina));
+            formTransform(tipoCorreo) === "REGISTROCIVIL"  ? formTransform(correo) + "@REGISTROCIVIL.GOB.CL" :
+                formTransform(tipoCorreo) === "CONSULADO" ? formTransform(correo) + "@MINREL.GOB.CL" :
+                    formTransform(tipoCorreo) === "MINISTERIO" ? formTransform(correo) + "@MINREL.CL" :
+                        formTransform(tipoCorreo) === "SRCEI" ? formTransform(correo) + "@SRCEI.CL" :
+                            formTransform(correo));
+        const construirMaquina = () => (formTransform(formTicket.tipoMaquina) === "SI" ? "S/I" :formTransform(formTicket.tipoMaquina) + "-" + formTransform(formTicket.maquina));
         const construirOficina = () => (
             formTransform(formTicket.tipoOficina) === "OFICINA"  ? "SRCEI "
                 + formTransform(formTicket.oficina) : "CONSULADO " + formTransform(formTicket.oficina));
@@ -87,7 +91,9 @@ const TicketForm = () => {
         if (formTransform(formTicket.tipoOficina) !== "OFICINA") {
             sb.appendLine("WHATSAPP: " + formTransform(formTicket.whatsapp));
         }
-        sb.appendLine("CORREO ELECTRONICO: " + construirCorreo());
+        if (derivacion !== "") {
+            sb.appendLine("CORREO ELECTRONICO: " + construirCorreo());
+        }
         sb.appendLine("OFICINA: " + construirOficina());
         sb.appendLine("IP: " + formTransform(formTicket.ip));
         sb.appendLine("CUENTA DE USUARIO: " + formTransform(formTicket.cuentaUsuario));
@@ -122,6 +128,10 @@ const TicketForm = () => {
             ...ticketFormData,
             [name]: type === "checkbox" ? checked : value,
         });
+    };
+
+    const handleChangeCE = (e) => {
+        setTipoCorreo(e.target.value);
     };
 
     const setExport = () => {
@@ -200,6 +210,7 @@ const TicketForm = () => {
         console.log(maquina);
         const resultado = buscarMaquinaPorMaquina(maquina);
 
+        setLugar(resultado.ofi);
         setTicketFormData({...ticketFormData, ip: formTransform(resultado.ip) });
     }
 
@@ -209,6 +220,7 @@ const TicketForm = () => {
         const tipo = resultado.acronimo;
         const codigo = extraerCodigoMaquina(resultado.nombre);
 
+        setLugar(resultado.ofi);
         setTicketFormData({...ticketFormData, tipoMaquina: formTransform(tipo), maquina: formTransform(codigo)});
     }
 
@@ -229,6 +241,8 @@ const TicketForm = () => {
         setTicket(tkt)
     };
 
+
+
     useEffect(() => {
         if (ticketFormData.tipoOficina === "CONSULADO") {
             setTicketFormData({...ticketFormData, tipoMaquina: "CON" });
@@ -240,6 +254,20 @@ const TicketForm = () => {
             setTicketFormData({...ticketFormData, tipoOficina: "CONSULADO" });
         } else {
             setTicketFormData({...ticketFormData, tipoOficina: "OFICINA" });
+        }
+    }, [ticketFormData.tipoMaquina]);
+
+    useEffect(() => {
+        if (tipoCorreo === "SI") {
+            setCorreo("S/I");
+        } else {
+            setCorreo("")
+        }
+    }, [tipoCorreo]);
+
+    useEffect(() => {
+        if (ticketFormData.tipoMaquina === "SI") {
+            setTicketFormData({...ticketFormData, maquina: "S/I", ip: "S/I" });
         }
     }, [ticketFormData.tipoMaquina]);
 
@@ -283,6 +311,7 @@ const TicketForm = () => {
                                     <input type="text" className="form-control form-control-sm" id="oficina"
                                            name="oficina" value={ticketFormData.oficina} onChange={handleChange}
                                            required/>
+                                    <p>Nombre de oficina: <span className="nombre-maquina"> { lugar ? lugar : "No disponible aún"}</span></p>
                                 </div>
 
                                 {
@@ -309,54 +338,6 @@ const TicketForm = () => {
                                     <input type="tel" className="form-control form-control-sm" id="celular"
                                            name="celular"
                                            value={ticketFormData.celular} onChange={handleChange}/>
-                                </div>
-
-                                <div className="col-md-6 mb-3">
-                                    <label htmlFor="correoElectronico" className="form-label">Correo Electrónico
-                                        <div className="btn-group ms-2" role="group">
-                                            <input type="radio" className="btn-check" name="tipoCorreo"
-                                                   id="registroCivilRadio"
-                                                   value="REGISTROCIVIL"
-                                                   checked={ticketFormData.tipoCorreo === "REGISTROCIVIL"}
-                                                   onChange={handleChange} required/>
-                                            <label className="btn btn-outline-primary btn-sm"
-                                                   htmlFor="registroCivilRadio">Registro
-                                                Civil</label>
-
-                                            <input type="radio" className="btn-check" name="tipoCorreo"
-                                                   id="consuladoInstRadio" value="CONSULADO"
-                                                   checked={ticketFormData.tipoCorreo === "CONSULADO"}
-                                                   onChange={handleChange}/>
-                                            <label className="btn btn-outline-primary btn-sm"
-                                                   htmlFor="consuladoInstRadio">Consulado</label>
-
-                                            <input type="radio" className="btn-check" name="tipoCorreo"
-                                                   id="ministerioRadio"
-                                                   value="MINISTERIO"
-                                                   checked={ticketFormData.tipoCorreo === "MINISTERIO"}
-                                                   onChange={handleChange}
-                                            />
-                                            <label className="btn btn-outline-primary btn-sm"
-                                                   htmlFor="ministerioRadio">Ministerio</label>
-
-                                            <input type="radio" className="btn-check" name="tipoCorreo" id="srceiRadio"
-                                                   value="SRCEI"
-                                                   checked={ticketFormData.tipoCorreo === "SRCEI"}
-                                                   onChange={handleChange}/>
-                                            <label className="btn btn-outline-primary btn-sm"
-                                                   htmlFor="srceiRadio">SRCEI</label>
-
-                                            <input type="radio" className="btn-check" name="tipoCorreo" id="siRadio"
-                                                   value="SI"
-                                                   checked={ticketFormData.tipoCorreo === "SI"}
-                                                   onChange={handleChange}/>
-                                            <label className="btn btn-outline-primary btn-sm"
-                                                   htmlFor="siRadio">S/I</label>
-                                        </div>
-                                    </label>
-                                    <input type="text" className="form-control form-control-sm" id="correoElectronico"
-                                           name="correoElectronico" value={ticketFormData.correoElectronico}
-                                           onChange={handleChange} required/>
                                 </div>
 
                                 <div className="col-md-6 mb-3">
@@ -450,6 +431,11 @@ const TicketForm = () => {
                                                    onChange={handleChange}/>
                                             <label className="btn btn-outline-primary btn-sm" htmlFor="totRadio"
                                                    title="TEM">TEM</label>
+                                            <input type="radio" className="btn-check" name="tipoMaquina" id="sinRadio"
+                                                   value="SI" checked={ticketFormData.tipoMaquina === "SI"}
+                                                   onChange={handleChange}/>
+                                            <label className="btn btn-outline-primary btn-sm" htmlFor="sinRadio"
+                                                   title="Sin información">S/I</label>
                                         </div>
                                     </label>
                                     <div className="d-flex">
@@ -460,7 +446,7 @@ const TicketForm = () => {
                                             <i className="bi bi-check-lg"></i>
                                         </button>
                                     </div>
-                                    <p>Nombre de máquina: <span className="nombre-maquina">{ isValidString(ticketFormData.maquina) ? (formTransform(ticketFormData.tipoMaquina) + "-" + formTransform(ticketFormData.maquina)): "No disponible aún"}</span></p>
+                                    <p>Nombre de máquina: <span className="nombre-maquina">{ isValidString(ticketFormData.maquina) && formTransform(ticketFormData.tipoMaquina) !== "SI" ? (formTransform(ticketFormData.tipoMaquina) + "-" + formTransform(ticketFormData.maquina)): "No disponible aún"}</span></p>
                                 </div>
                                 <div className="col-md-6 mb-3">
                                     <label className="form-label">Es de responsabilidad del SRCeI?</label>
@@ -511,6 +497,52 @@ const TicketForm = () => {
                                                 </label>
                                                 <input type="text" className="form-control form-control-sm mt-1" id="horario"
                                                        name="horario" value={horario} onChange={(e) => setHorario(e.target.value)} required/>
+                                                <div className="col-md-6 mb-3 mt-3">
+                                                    <label htmlFor="correoElectronico" className="form-label">Correo Electrónico
+                                                        <div className="btn-group ms-2" role="group">
+                                                            <input type="radio" className="btn-check" name="tipoCorreo"
+                                                                   id="registroCivilRadio"
+                                                                   value="REGISTROCIVIL"
+                                                                   checked={tipoCorreo === "REGISTROCIVIL"}
+                                                                   onChange={handleChangeCE} required/>
+                                                            <label className="btn btn-outline-primary btn-sm"
+                                                                   htmlFor="registroCivilRadio">Registro
+                                                                Civil</label>
+
+                                                            <input type="radio" className="btn-check" name="tipoCorreo"
+                                                                   id="consuladoInstRadio" value="CONSULADO"
+                                                                   checked={tipoCorreo === "CONSULADO"}
+                                                                   onChange={handleChangeCE}/>
+                                                            <label className="btn btn-outline-primary btn-sm"
+                                                                   htmlFor="consuladoInstRadio">Consulado</label>
+
+                                                            <input type="radio" className="btn-check" name="tipoCorreo"
+                                                                   id="ministerioRadio"
+                                                                   value="MINISTERIO"
+                                                                   checked={tipoCorreo === "MINISTERIO"}
+                                                                   onChange={handleChangeCE}
+                                                            />
+                                                            <label className="btn btn-outline-primary btn-sm"
+                                                                   htmlFor="ministerioRadio">Ministerio</label>
+
+                                                            <input type="radio" className="btn-check" name="tipoCorreo" id="srceiRadio"
+                                                                   value="SRCEI"
+                                                                   checked={tipoCorreo === "SRCEI"}
+                                                                   onChange={handleChangeCE}/>
+                                                            <label className="btn btn-outline-primary btn-sm"
+                                                                   htmlFor="srceiRadio">SRCEI</label>
+
+                                                            <input type="radio" className="btn-check" name="tipoCorreo" id="siRadio"
+                                                                   value="SI"
+                                                                   checked={tipoCorreo === "SI"}
+                                                                   onChange={handleChangeCE} />
+                                                            <label className="btn btn-outline-primary btn-sm"
+                                                                   htmlFor="siRadio">S/I</label>
+                                                        </div>
+                                                    </label>
+                                                    <input type="text" className="form-control form-control-sm" id="correoElectronico"
+                                                           name="correoElectronico" value={correo} onChange={ (e) => setCorreo(e.target.value)} r/>
+                                                </div>
                                             </div>
                                         </div>
                                     )
@@ -562,6 +594,101 @@ const TicketForm = () => {
                                                            onChange={() => setFallaFisica("NO")} />
                                                     <label htmlFor="fallaFisicaNo" className="form-check-label">No</label>
                                                 </div>
+                                            </div>
+                                            <div className="col-md-6 mb-3 mt-3">
+                                                <label className="form-label" htmlFor="correoElectronico2">
+                                                    Correo Electrónico
+                                                </label>
+
+                                                <div className="btn-group ms-2 mb-2" role="group">
+                                                    <input
+                                                        type="radio"
+                                                        className="btn-check"
+                                                        name="tipoCorreo2"
+                                                        id="registroCivilRadio2"
+                                                        value="REGISTROCIVIL"
+                                                        checked={tipoCorreo === "REGISTROCIVIL"}
+                                                        onChange={handleChangeCE}
+                                                        required
+                                                    />
+                                                    <label
+                                                        className="btn btn-outline-primary btn-sm"
+                                                        htmlFor="registroCivilRadio2"
+                                                    >
+                                                        Registro Civil
+                                                    </label>
+
+                                                    <input
+                                                        type="radio"
+                                                        className="btn-check"
+                                                        name="tipoCorreo2"
+                                                        id="consuladoInstRadio2"
+                                                        value="CONSULADO"
+                                                        checked={tipoCorreo === "CONSULADO"}
+                                                        onChange={handleChangeCE}
+                                                    />
+                                                    <label
+                                                        className="btn btn-outline-primary btn-sm"
+                                                        htmlFor="consuladoInstRadio2"
+                                                    >
+                                                        Consulado
+                                                    </label>
+
+                                                    <input
+                                                        type="radio"
+                                                        className="btn-check"
+                                                        name="tipoCorreo2"
+                                                        id="ministerioRadio2"
+                                                        value="MINISTERIO"
+                                                        checked={tipoCorreo === "MINISTERIO"}
+                                                        onChange={handleChangeCE}
+                                                    />
+                                                    <label
+                                                        className="btn btn-outline-primary btn-sm"
+                                                        htmlFor="ministerioRadio2"
+                                                    >
+                                                        Ministerio
+                                                    </label>
+
+                                                    <input
+                                                        type="radio"
+                                                        className="btn-check"
+                                                        name="tipoCorreo2"
+                                                        id="srceiRadio2"
+                                                        value="SRCEI"
+                                                        checked={tipoCorreo === "SRCEI"}
+                                                        onChange={handleChangeCE}
+                                                    />
+                                                    <label
+                                                        className="btn btn-outline-primary btn-sm"
+                                                        htmlFor="srceiRadio2"
+                                                    >
+                                                        SRCEI
+                                                    </label>
+
+                                                    <input
+                                                        type="radio"
+                                                        className="btn-check"
+                                                        name="tipoCorreo2"
+                                                        id="siRadio2"
+                                                        value="SI"
+                                                        checked={tipoCorreo === "SI"}
+                                                        onChange={handleChangeCE}
+                                                    />
+                                                    <label className="btn btn-outline-primary btn-sm" htmlFor="siRadio2">
+                                                        S/I
+                                                    </label>
+                                                </div>
+
+                                                <input
+                                                    type="text"
+                                                    className="form-control form-control-sm"
+                                                    id="correoElectronico2"
+                                                    name="correoElectronico2"
+                                                    value={correo}
+                                                    onChange={(e) => setCorreo(e.target.value)}
+                                                    required
+                                                />
                                             </div>
                                         </div>
                                     )
