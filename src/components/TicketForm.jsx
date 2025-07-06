@@ -7,6 +7,8 @@ import {formTransform} from "../utilities/FormTransform.js";
 import {isValidString, variableUtils} from "../utilities/VariableUtils.js";
 import {useNavigate} from "react-router";
 import ReportForm from "./ReportForm.jsx";
+import FormModal from "./generic/FormModal.jsx";
+import OficioModal from "./modalForms/OficioModal.jsx";
 
 const TicketForm = () => {
 
@@ -22,6 +24,7 @@ const TicketForm = () => {
     const {reporte, setReporte} = useContext(TicketContext);
     const {derivacion, setDerivacion} = useContext(TicketContext);
     const {setTicketExport} = useContext(TicketContext);
+    const {oficioForm, setOficioForm} = useContext(TicketContext);
 
     const [n2Visibility, setN2Visibility] = useState(false);
     const [n3Visibility, setN3Visibility] = useState(false);
@@ -33,9 +36,14 @@ const TicketForm = () => {
     const [rotulo, setRotulo] = useState(null);
     const [fallaFisica, setFallaFisica] = useState("NO");
 
-    const[correoExport, setCorreoExport] = useState("");
-    const[maquinaExport, setMaquinaExport] = useState("");
-    const[oficinaExport, setOficinaExport] = useState("");
+    const [correoExport, setCorreoExport] = useState("");
+    const [maquinaExport, setMaquinaExport] = useState("");
+    const [oficinaExport, setOficinaExport] = useState("");
+
+    const [showModal, setShowModal] = useState(false);
+    const [title, setTitle] = useState("");
+    const [formComponent, setFormComponent] = useState(null);
+
 
     const extraerCodigoMaquina = (cadena) => {
         const [, despues] = cadena.split("-");
@@ -49,6 +57,7 @@ const TicketForm = () => {
     const buscarMaquinaPorMaquina = (maquina) => {
         return inventario.find(item => formTransform(item.nombre) === maquina)
     }
+
 
 
     const parseTicket = (formTicket) => {
@@ -201,6 +210,17 @@ const TicketForm = () => {
         const codigo = extraerCodigoMaquina(resultado.nombre);
 
         setTicketFormData({...ticketFormData, tipoMaquina: formTransform(tipo), maquina: formTransform(codigo)});
+    }
+
+    const asignarOficina = () => {
+        const maquina = buscarMaquinaPorIP(formTransform(ticketFormData.ip));
+        setOficioForm({...oficioForm, codigoOficina: maquina.oficina});
+    }
+
+    const handleFormModal = (titulo, componente) => {
+        setTitle(titulo);
+        setFormComponent(componente);
+        setShowModal(true);
     }
 
     const handleSubmit = (e) => {
@@ -554,7 +574,7 @@ const TicketForm = () => {
                                 </div>
                                 <div className="resolver-d">
                                     <button type="submit" className="btn btn-success">Resolver</button> &nbsp; &nbsp;
-                                    <button type="button" className="btn btn-warning" onClick={ () => {setN2Visibility(!n2Visibility); setN3Visibility(false); setRotulo(null); setDireccion(null); setDerivacion("n2");}}>N2 Adm</button> &nbsp; &nbsp;
+                                    <button type="button" className="btn btn-warning" onClick={ () => {setN2Visibility(!n2Visibility); setN3Visibility(false); setRotulo(null); setDireccion(null); setDerivacion("n2"); asignarOficina();}}>N2 Adm</button> &nbsp; &nbsp;
                                     <button type="button" className="btn btn-warning" onClick={ () => {setN3Visibility(!n3Visibility); setN2Visibility(false); setDerivacion("n3");}}>N3 CECOM</button>
                                 </div>
                             </div>
@@ -567,23 +587,30 @@ const TicketForm = () => {
                 <TicketBody text={ticket} title={"TICKET"} setter={setTicket} rows={15} bootstrapColor="text-bg-primary"/>
             </div>
             <div className="col-md-12 mb-2">
-                <div className="d-flex justify-content-center gap-3 flex-wrap">
-                    <button type="button" className="btn btn-outline-primary btn-round" title="Oficio">
-                        <i className="bi bi-file-earmark-text"></i>
-                    </button>
-                    <button type="button" className="btn btn-outline-warning btn-round" title="Oficio Corregido">
-                        <i className="bi bi-pencil-square"></i>
-                    </button>
-                    <button type="button" className="btn btn-outline-success btn-round" title="Término de Tarea">
-                        <i className="bi bi-check-circle"></i>
-                    </button>
-                    <button type="button" className="btn btn-outline-info btn-round" title="Despachar Solicitud">
-                        <i className="bi bi-send"></i>
-                    </button>
-                    <button type="button" className="btn btn-outline-dark btn-round" title="Cuadratura de Caja">
-                        <i className="bi bi-cash-stack"></i>
-                    </button>
-                </div>
+                {
+                    derivacion === "n2" ?
+                        <div className="d-flex justify-content-center gap-3 flex-wrap">
+                            <button type="button" className="btn btn-outline-primary btn-round" title="Oficio"
+                                    onClick={() => handleFormModal("Agregar oficio",
+                                        <OficioModal cerrarModal={ () => setShowModal(false)} />)}>
+                                <i className="bi bi-file-earmark-text"></i>
+                            </button>
+                            <button type="button" className="btn btn-outline-warning btn-round" title="Oficio Corregido">
+                                <i className="bi bi-pencil-square"></i>
+                            </button>
+                            <button type="button" className="btn btn-outline-success btn-round" title="Término de Tarea">
+                                <i className="bi bi-check-circle"></i>
+                            </button>
+                            <button type="button" className="btn btn-outline-info btn-round" title="Despachar Solicitud">
+                                <i className="bi bi-send"></i>
+                            </button>
+                            <button type="button" className="btn btn-outline-dark btn-round" title="Cuadratura de Caja">
+                                <i className="bi bi-cash-stack"></i>
+                            </button>
+                        </div>
+                        :
+                        <></>
+                }
             </div>
             <div className="col-md-12 mb-2">
                 {
@@ -607,6 +634,7 @@ const TicketForm = () => {
                         </button>
                 }
             </div>
+            <FormModal show={showModal} setShow={setShowModal} formComponent={formComponent} title={title}/>
         </>
     );
 };

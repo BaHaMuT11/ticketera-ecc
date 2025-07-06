@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-const Modal = (props) => {
+const FormModal = (props) => {
 
     return (
         <>
@@ -10,7 +10,7 @@ const Modal = (props) => {
                         <div className="modal-dialog" role="document">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h5 className="modal-title">Título del Modal</h5>
+                                    <h5 className="modal-title">{props.title}</h5>
                                     <button
                                         type="button"
                                         className="btn-close"
@@ -18,21 +18,7 @@ const Modal = (props) => {
                                         onClick={() => props.setShow(false)}
                                     ></button>
                                 </div>
-                                <div className="modal-body">
-                                    <p>Este es el contenido del modal.</p>
-                                </div>
-                                <div className="modal-footer">
-                                    <button
-                                        type="button"
-                                        className="btn btn-secondary"
-                                        onClick={() => props.setShow(false)}
-                                    >
-                                        Cerrar
-                                    </button>
-                                    <button type="button" className="btn btn-primary">
-                                        Guardar cambios
-                                    </button>
-                                </div>
+                                {props.formComponent}
                             </div>
                         </div>
                     </div>
@@ -43,9 +29,11 @@ const Modal = (props) => {
     );
 };
 
-Modal.propTypes = {
+FormModal.propTypes = {
     show: PropTypes.bool.isRequired,
-    setShow: PropTypes.func.isRequired
+    setShow: PropTypes.func.isRequired,
+    title: PropTypes.string.isRequired,
+    formComponent: PropTypes.element.isRequired
 }
 
-export default Modal;
+export default FormModal;

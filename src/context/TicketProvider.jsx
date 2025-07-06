@@ -34,13 +34,25 @@ export const TicketProvider = ({ children }) => {
         responsabilidad: "",
         oficina: ""
     });
+
+    const [oficioForm, setOficioForm] = useState({
+        numeroOficio: "",
+        tipoOficio: "CÉDULA",
+        anioOficio: "2025",
+        codigoOficina: "",
+        run: ""
+    });
+    const [oficio, setOficio] = useState("");
+
     return (
         <TicketContext.Provider value={{
             ticketFormData, setTicketFormData,
             ticket, setTicket,
             derivacion, setDerivacion,
             ticketExport, setTicketExport,
-            reporte, setReporte}}>
+            reporte, setReporte,
+            oficioForm, setOficioForm,
+            oficio, setOficio}}>
 
             {children}
         </TicketContext.Provider>
