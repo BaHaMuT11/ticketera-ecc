@@ -66,7 +66,7 @@ const TicketForm = () => {
 
     const parseTicket = (formTicket) => {
 
-        const defTipoEstacion = (formTransform(formTicket.tipoMaquina) === "SI" ? "TIPO ESTACION: S/I" : "TIPO ESTACION: " + formTransform(formTicket.tipoMaquina));
+        const defTipoEstacion = (formTransform(formTicket.tipoMaquina) === "SI" ? "TIPO DE ESTACION: S/I" : "TIPO DE ESTACION: " + formTransform(formTicket.tipoMaquina));
         const sb = new StringBuilder(defTipoEstacion);
 
         const construirCorreo = () => (
@@ -84,7 +84,7 @@ const TicketForm = () => {
         setMaquinaExport(construirMaquina());
         setOficinaExport(construirOficina());
 
-        sb.appendLine("NOMBRE MAQUINA: " + construirMaquina());
+        sb.appendLine("NOMBRE DE MAQUINA: " + construirMaquina());
         sb.appendLine("NOMBRE: " + formTransform(formTicket.nombre));
         sb.appendLine("FONO FIJO: " + formTransform(formTicket.fonoFijo));
         sb.appendLine("CELULAR: " + formTransform(formTicket.celular));
