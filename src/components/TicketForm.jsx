@@ -97,7 +97,6 @@ const TicketForm = () => {
         sb.appendLine("OFICINA: " + construirOficina());
         sb.appendLine("IP: " + formTransform(formTicket.ip));
         sb.appendLine("CUENTA DE USUARIO: " + formTransform(formTicket.cuentaUsuario));
-        sb.appendLine("APLICACIÓN CON PROBLEMA: " + formTransform(formTicket.appConProblemas));
         sb.appendLine("PROBLEMA_PRE-DIAGNOSTICO: " + formTransform(formTicket.problema));
         sb.appendLine("PRUEBAS DE LA MESA: " + formTransform(formTicket.pruebasMesa));
 
@@ -465,18 +464,6 @@ const TicketForm = () => {
                                         <label htmlFor="responsabilidadNo" className="form-check-label">No</label>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div className="mb-3">
-                                <label htmlFor="appConProblemas" className="form-label">App con problemas:</label>
-                                <select className="form-select form-select-sm" id="appConProblemas" name="appConProblemas"
-                                        value={ticketFormData.appConProblemas} onChange={handleChange} required>
-                                    <option value="Portal Atención Usuarios">Portal Atención Usuarios</option>
-                                    <option value="Portal Central">Portal Central</option>
-                                    <option value="Cursos eLearning">Cursos eLearning</option>
-                                    <option value="Teléfono">Teléfono</option>
-                                    <option value="Portal de Autoatención">Portal de Autoatención</option>
-                                </select>
                             </div>
 
 
