@@ -77,8 +77,8 @@ const TicketForm = () => {
                             formTransform(correo));
         const construirMaquina = () => (formTransform(formTicket.tipoMaquina) === "SI" ? "S/I" :formTransform(formTicket.tipoMaquina) + "-" + formTransform(formTicket.maquina));
         const construirOficina = () => (
-            formTransform(formTicket.tipoOficina) === "OFICINA"  ? "SRCEI "
-                + formTransform(formTicket.oficina) : "CONSULADO " + formTransform(formTicket.oficina));
+            formTransform(formTicket.tipoOficina) === "OFICINA"  ? ""
+                + formTransform(formTicket.oficina) : "" + formTransform(formTicket.oficina));
 
         setCorreoExport(construirCorreo());
         setMaquinaExport(construirMaquina());
