@@ -195,6 +195,7 @@ const SrceiForm = () => {
                                     <input type="text" className="form-control form-control-sm" id="region" name="region"
                                            value={srceiFormData.region} onChange={handleChange}
                                            placeholder="Ej.: BIO BIO" required/>
+                                    <p>Región: <span className="nombre-maquina"> { ticketExport.region ? ticketExport.region : "No disponible aún"}</span></p>
                                 </div>
                                 <div className="col-md-12 mb-3">
                                     <label htmlFor="taxonomia" className="form-label">Taxonomía</label>

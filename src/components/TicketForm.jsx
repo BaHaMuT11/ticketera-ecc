@@ -3,7 +3,7 @@ import {UserContext} from "../context/UserProvider.jsx";
 import {TicketContext} from "../context/TicketProvider.jsx";
 import {StringBuilder} from "../utilities/StringBuilder.js"
 import TicketBody from "./generic/TicketBody.jsx";
-import {formTransform} from "../utilities/FormTransform.js";
+import {formTransform, limpiarRegion, traducirOficina} from "../utilities/FormTransform.js";
 import {isValidString, variableUtils} from "../utilities/VariableUtils.js";
 import {useNavigate} from "react-router";
 import ReportForm from "./ReportForm.jsx";
@@ -62,8 +62,6 @@ const TicketForm = () => {
         return inventario.find(item => formTransform(item.nombre) === maquina)
     }
 
-
-
     const parseTicket = (formTicket) => {
 
         const defTipoEstacion = (formTransform(formTicket.tipoMaquina) === "SI" ? "TIPO DE ESTACION: S/I" : "TIPO DE ESTACION: " + formTransform(formTicket.tipoMaquina));
@@ -78,7 +76,7 @@ const TicketForm = () => {
         const construirMaquina = () => (formTransform(formTicket.tipoMaquina) === "SI" ? "S/I" :formTransform(formTicket.tipoMaquina) + "-" + formTransform(formTicket.maquina));
         const construirOficina = () => (
             formTransform(formTicket.tipoOficina) === "OFICINA"  ? ""
-                + formTransform(formTicket.oficina) : "" + formTransform(formTicket.oficina));
+                + formTransform(traducirOficina(formTicket.oficina)) : "" + formTransform(traducirOficina(formTicket.oficina)));
 
         setCorreoExport(construirCorreo());
         setMaquinaExport(construirMaquina());
@@ -143,7 +141,8 @@ const TicketForm = () => {
                 numero: formTransform(ticketFormData.celular) + " - " + formTransform(ticketFormData.fonoFijo),
                 responsabilidad: formTransform(ticketFormData.responsabilidad),
                 oficina: oficinaExport,
-                derivacion: formTransform(derivacion)
+                derivacion: formTransform(derivacion),
+                region: encontrarRegion(maquinaExport)
             }
         );
     }
@@ -207,10 +206,9 @@ const TicketForm = () => {
 
     const validarDesdeMaquina = () => {
         const maquina = (formTransform(ticketFormData.tipoMaquina) + "-" + formTransform(ticketFormData.maquina))
-        console.log(maquina);
         const resultado = buscarMaquinaPorMaquina(maquina);
 
-        setLugar(resultado.ofi);
+        setLugar(traducirOficina(resultado.ofi));
         setTicketFormData({...ticketFormData, ip: formTransform(resultado.ip) });
     }
 
@@ -220,8 +218,13 @@ const TicketForm = () => {
         const tipo = resultado.acronimo;
         const codigo = extraerCodigoMaquina(resultado.nombre);
 
-        setLugar(resultado.ofi);
+        setLugar(traducirOficina(resultado.ofi));
         setTicketFormData({...ticketFormData, tipoMaquina: formTransform(tipo), maquina: formTransform(codigo)});
+    }
+
+    const encontrarRegion = (maquina) => {
+        const estacion = inventario.find(item => formTransform(item.nombre) === maquina)
+        return limpiarRegion(estacion.region)
     }
 
     const asignarOficina = () => {

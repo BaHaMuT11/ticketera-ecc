@@ -30,7 +30,8 @@ export const TicketProvider = ({ children }) => {
         estacion: "",
         numero: "",
         responsabilidad: "",
-        oficina: ""
+        oficina: "",
+        region: ""
     });
 
     const [oficioForm, setOficioForm] = useState({
