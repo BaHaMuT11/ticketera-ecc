@@ -4,7 +4,7 @@ import {TicketContext} from "../context/TicketProvider.jsx";
 import {StringBuilder} from "../utilities/StringBuilder.js"
 import TicketBody from "./generic/TicketBody.jsx";
 import {formTransform, limpiarRegion, traducirOficina} from "../utilities/FormTransform.js";
-import {isValidString, variableUtils} from "../utilities/VariableUtils.js";
+import {isset, isValidString, variableUtils} from "../utilities/VariableUtils.js";
 import {useNavigate} from "react-router";
 import ReportForm from "./ReportForm.jsx";
 import FormModal from "./generic/FormModal.jsx";
@@ -224,7 +224,11 @@ const TicketForm = () => {
 
     const encontrarRegion = (maquina) => {
         const estacion = inventario.find(item => formTransform(item.nombre) === maquina)
-        return limpiarRegion(estacion.region)
+        if (isset(estacion)) {
+            return limpiarRegion(estacion.region)
+        } else {
+            return "";
+        }
     }
 
     const asignarOficina = () => {
