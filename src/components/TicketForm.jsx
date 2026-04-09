@@ -330,6 +330,181 @@ const TicketForm = () => {
                                            value={ticketFormData.celular} onChange={handleChange}/>
                                 </div>
 
+                                <div className="mb-3 n3">
+                                    <label htmlFor="horario" className="form-label d-flex align-items-center">
+                                        Horario
+                                        <div className="btn-group btn-group-sm ms-2" role="group">
+                                            <input type="radio" className="btn-check" name="horarioRadio"
+                                                   id="horarioLaJ_V" autoComplete="off" onClick={ ()=> setTicketFormData({...ticketFormData, horario: "LUNES A JUEVES 8:30 - 1 , VIERNES HASTA LAS 1" })} />
+                                            <label className="btn btn-outline-primary"
+                                                   htmlFor="horarioLaJ_V">LaJ+V</label>
+
+                                            <input type="radio" className="btn-check" name="horarioRadio"
+                                                   id="horarioLaV" autoComplete="off" onClick={ ()=> setTicketFormData({...ticketFormData, horario: "LUNES A VIERNES 8:30 - 1" })} />
+                                            <label className="btn btn-outline-primary"
+                                                   htmlFor="horarioLaV">LaV</label>
+                                        </div>
+                                    </label>
+                                    <input type="text" className="form-control form-control-sm mt-1" id="horario"
+                                           name="horario" value={ticketFormData.horario} onChange={handleChange} required/>
+                                </div>
+                                <div className="mb-3 n3">
+                                    <label htmlFor="direccion" className="form-label">Dirección</label>
+                                    <input type="text" className="form-control form-control-sm" id="direccion"
+                                           name="direccion" value={ticketFormData.direccion} onChange={handleChange} required/>
+
+                                </div>
+
+
+                                <div className="col-md-6 mb-3 mt-3">
+                                    <label className="form-label" htmlFor="correoElectronico2">
+                                        Correo Electrónico
+                                    </label>
+
+                                    <div className="btn-group ms-2 mb-2" role="group">
+                                        <input
+                                            type="radio"
+                                            className="btn-check"
+                                            name="tipoCorreo"
+                                            id="registroCivilRadio2"
+                                            value="REGISTROCIVIL"
+                                            checked={ticketFormData.tipoCorreo === "REGISTROCIVIL"}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                        <label
+                                            className="btn btn-outline-primary btn-sm"
+                                            htmlFor="registroCivilRadio2"
+                                        >
+                                            Registro Civil
+                                        </label>
+
+                                        <input
+                                            type="radio"
+                                            className="btn-check"
+                                            name="tipoCorreo"
+                                            id="consuladoInstRadio2"
+                                            value="CONSULADO"
+                                            checked={ticketFormData.tipoCorreo === "CONSULADO"}
+                                            onChange={handleChange}
+                                        />
+                                        <label
+                                            className="btn btn-outline-primary btn-sm"
+                                            htmlFor="consuladoInstRadio2"
+                                        >
+                                            Consulado
+                                        </label>
+
+                                        <input
+                                            type="radio"
+                                            className="btn-check"
+                                            name="tipoCorreo"
+                                            id="ministerioRadio2"
+                                            value="MINISTERIO"
+                                            checked={ticketFormData.tipoCorreo === "MINISTERIO"}
+                                            onChange={handleChange}
+                                        />
+                                        <label
+                                            className="btn btn-outline-primary btn-sm"
+                                            htmlFor="ministerioRadio2"
+                                        >
+                                            Ministerio
+                                        </label>
+
+                                        <input
+                                            type="radio"
+                                            className="btn-check"
+                                            name="tipoCorreo"
+                                            id="srceiRadio2"
+                                            value="SRCEI"
+                                            checked={ticketFormData.tipoCorreo === "SRCEI"}
+                                            onChange={handleChange}
+                                        />
+                                        <label
+                                            className="btn btn-outline-primary btn-sm"
+                                            htmlFor="srceiRadio2"
+                                        >
+                                            SRCEI
+                                        </label>
+
+                                        <input
+                                            type="radio"
+                                            className="btn-check"
+                                            name="tipoCorreo"
+                                            id="siRadio2"
+                                            value="SI"
+                                            checked={ticketFormData.tipoCorreo === "SI"}
+                                            onChange={handleChange}
+                                        />
+                                        <label
+                                            className="btn btn-outline-primary btn-sm"
+                                            htmlFor="siRadio2"
+                                        >
+                                            S/I
+                                        </label>
+                                    </div>
+
+                                    <input
+                                        type="text"
+                                        className="form-control form-control-sm"
+                                        id="correoElectronico2"
+                                        name="correo"
+                                        value={ticketFormData.correo}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+
+                                <div className="col-md-6 mb-3">
+                                    <label htmlFor="celular" className="form-label">Celular</label>
+                                    <input
+                                        type="tel"
+                                        className="form-control form-control-sm"
+                                        id="celular"
+                                        name="celular"
+                                        value={ticketFormData.celular}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+
+                                <div className="col-md-6 mb-3">
+                                    <label htmlFor="fonoFijo" className="form-label">Fono Fijo</label>
+                                    <input
+                                        type="tel"
+                                        className="form-control form-control-sm"
+                                        id="fonoFijo"
+                                        name="fonoFijo"
+                                        value={ticketFormData.fonoFijo}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+
+                                <div className="col-md-6 mb-3">
+                                    <label htmlFor="ip" className="form-label">IP</label>
+                                    <div className="d-flex">
+                                        <input
+                                            type="text"
+                                            className="form-control form-control-sm"
+                                            id="ip"
+                                            name="ip"
+                                            value={ticketFormData.ip}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                        &nbsp;
+                                        <button
+                                            className="boton-verde-sm"
+                                            type="button"
+                                            onClick={validarDesdeIp}
+                                        >
+                                            <i className="bi bi-check-lg"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+
+
+
                                 <div className="col-md-6 mb-3">
                                     <label htmlFor="fonoFijo" className="form-label">Fono Fijo</label>
                                     <input type="tel" className="form-control form-control-sm" id="fonoFijo"
