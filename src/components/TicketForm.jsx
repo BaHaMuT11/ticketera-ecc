@@ -4,7 +4,7 @@ import {TicketContext} from "../context/TicketProvider.jsx";
 import {StringBuilder} from "../utilities/StringBuilder.js"
 import TicketBody from "./generic/TicketBody.jsx";
 import {formTransform, limpiarRegion, traducirOficina} from "../utilities/FormTransform.js";
-import {isset, isValidString, variableUtils} from "../utilities/VariableUtils.js";
+import {isset, isValidString} from "../utilities/VariableUtils.js";
 import {useNavigate} from "react-router";
 import ReportForm from "./ReportForm.jsx";
 import FormModal from "./generic/FormModal.jsx";
@@ -26,17 +26,8 @@ const TicketForm = () => {
     const {setTicketExport} = useContext(TicketContext);
     const {oficioForm, setOficioForm} = useContext(TicketContext);
 
-    const [n2Visibility, setN2Visibility] = useState(false);
-    const [n3Visibility, setN3Visibility] = useState(false);
 
     const navigate = useNavigate();
-
-    const [horario, setHorario] = useState(null);
-    const [direccion, setDireccion] = useState(null);
-    const [rotulo, setRotulo] = useState(null);
-    const [fallaFisica, setFallaFisica] = useState("NO");
-    const [correo, setCorreo] = useState("");
-    const [tipoCorreo, setTipoCorreo] = useState("REGISTROCIVIL");
 
     const [correoExport, setCorreoExport] = useState("");
     const [maquinaExport, setMaquinaExport] = useState("");
@@ -63,62 +54,58 @@ const TicketForm = () => {
     }
 
     const parseTicket = (formTicket) => {
+        const defTipoEstacion =
+            formTransform(formTicket.tipoMaquina) === "SI"
+                ? "TIPO DE ESTACION: S/I"
+                : "TIPO DE ESTACION: " + formTransform(formTicket.tipoMaquina);
 
-        const defTipoEstacion = (formTransform(formTicket.tipoMaquina) === "SI" ? "TIPO DE ESTACION: S/I" : "TIPO DE ESTACION: " + formTransform(formTicket.tipoMaquina));
         const sb = new StringBuilder(defTipoEstacion);
 
-        const construirCorreo = () => (
-            formTransform(tipoCorreo) === "REGISTROCIVIL"  ? formTransform(correo) + "@REGISTROCIVIL.GOB.CL" :
-                formTransform(tipoCorreo) === "CONSULADO" ? formTransform(correo) + "@MINREL.GOB.CL" :
-                    formTransform(tipoCorreo) === "MINISTERIO" ? formTransform(correo) + "@MINREL.CL" :
-                        formTransform(tipoCorreo) === "SRCEI" ? formTransform(correo) + "@SRCEI.CL" :
-                            formTransform(correo));
-        const construirMaquina = () => (formTransform(formTicket.tipoMaquina) === "SI" ? "S/I" :formTransform(formTicket.tipoMaquina) + "-" + formTransform(formTicket.maquina));
-        const construirOficina = () => (
-            formTransform(formTicket.tipoOficina) === "OFICINA"  ? "SRCEI "
-                + formTransform(traducirOficina(formTicket.oficina)) : "CONSULADO " + formTransform(traducirOficina(formTicket.oficina)));
+        const construirCorreo = () =>
+            formTransform(formTicket.tipoCorreo) === "REGISTROCIVIL"
+                ? formTransform(formTicket.correo) + "@REGISTROCIVIL.GOB.CL"
+                : formTransform(formTicket.tipoCorreo) === "CONSULADO"
+                    ? formTransform(formTicket.correo) + "@MINREL.GOB.CL"
+                    : formTransform(formTicket.tipoCorreo) === "MINISTERIO"
+                        ? formTransform(formTicket.correo) + "@MINREL.CL"
+                        : formTransform(formTicket.tipoCorreo) === "SRCEI"
+                            ? formTransform(formTicket.correo) + "@SRCEI.CL"
+                            : formTransform(formTicket.correo);
+
+        const construirMaquina = () =>
+            formTransform(formTicket.tipoMaquina) === "SI"
+                ? "S/I"
+                : formTransform(formTicket.tipoMaquina) + "-" + formTransform(formTicket.maquina);
+
+        const construirOficina = () =>
+            formTransform(formTicket.tipoOficina) === "OFICINA"
+                ? "SRCEI " + formTransform(traducirOficina(formTicket.oficina))
+                : "CONSULADO " + formTransform(traducirOficina(formTicket.oficina));
 
         setCorreoExport(construirCorreo());
         setMaquinaExport(construirMaquina());
         setOficinaExport(construirOficina());
 
-        sb.appendLine("NOMBRE DE MAQUINA: " + construirMaquina());
+        sb.appendLine("NOMBRE DE MÁQUINA: " + construirMaquina());
         sb.appendLine("NOMBRE: " + formTransform(formTicket.nombre));
-        sb.appendLine("FONO FIJO: " + formTransform(formTicket.fonoFijo));
         sb.appendLine("CELULAR: " + formTransform(formTicket.celular));
-        if (formTransform(formTicket.tipoOficina) !== "OFICINA") {
-            sb.appendLine("WHATSAPP: " + formTransform(formTicket.whatsapp));
-        }
+
         if (derivacion !== "") {
             sb.appendLine("CORREO ELECTRONICO: " + construirCorreo());
         }
+
         sb.appendLine("OFICINA: " + construirOficina());
         sb.appendLine("IP: " + formTransform(formTicket.ip));
-        sb.appendLine("CUENTA DE USUARIO: " + formTransform(formTicket.cuentaUsuario));
+        sb.appendLine("CUENTA USUARIO: " + formTransform(formTicket.cuentaUsuario));
         sb.appendLine("PROBLEMA_PRE-DIAGNOSTICO: " + formTransform(formTicket.problema));
-        sb.appendLine("PRUEBAS DE LA MESA: " + formTransform(formTicket.pruebasMesa));
+        sb.appendLine("PRUEBA DE LA MESA: " + formTransform(formTicket.pruebasMesa));
 
-        if (derivacion === "n2") {
-            if (variableUtils(horario)) {
-                sb.appendLine("DIAS Y HORARIO DE CHILE: " + formTransform(horario));
-            }
-        }
-
-        if (derivacion === "n3") {
-            sb.appendLine("FALLA FISICA HW: " + formTransform(fallaFisica));
-            if (variableUtils(direccion)) {
-                sb.appendLine("DIRECCION: " + formTransform(direccion));
-            }
-            if (variableUtils(horario)) {
-                sb.appendLine("DIAS Y HORARIO DE OFICINA: " + formTransform(horario));
-            }
-            if (variableUtils(rotulo)) {
-                sb.appendLine("ROTULO: " + formTransform(rotulo));
-            }
-        }
+        // Siempre visibles
+        sb.appendLine("DIRECCIÓN: " + formTransform(formTicket.direccion));
+        sb.appendLine("HORARIO DE ATENCIÓN: " + formTransform(formTicket.horario));
 
         return sb.toString();
-    }
+    };
 
     const handleChange = (e) => {
         const {name,value,type,checked} = e.target;
@@ -126,10 +113,6 @@ const TicketForm = () => {
             ...ticketFormData,
             [name]: type === "checkbox" ? checked : value,
         });
-    };
-
-    const handleChangeCE = (e) => {
-        setTipoCorreo(e.target.value);
     };
 
     const setExport = () => {
@@ -236,6 +219,18 @@ const TicketForm = () => {
         setOficioForm({...oficioForm, codigoOficina: maquina.oficina});
     }
 
+    const derivarTicket = (grupo) => {
+        if (grupo === "n1") {
+            setDerivacion("n1");
+        }
+        else if (grupo === "n2") {
+            setDerivacion("n2");
+            asignarOficina();
+        } else {
+            setDerivacion("n3");
+        }
+    }
+
     const handleFormModal = (titulo, componente) => {
         setTitle(titulo);
         setFormComponent(componente);
@@ -265,12 +260,12 @@ const TicketForm = () => {
     }, [ticketFormData.tipoMaquina]);
 
     useEffect(() => {
-        if (tipoCorreo === "SI") {
-            setCorreo("S/I");
+        if (ticketFormData.tipoCorreo === "SI") {
+            setTicketFormData({...ticketFormData, correo: "S/I" });
         } else {
-            setCorreo("")
+            setTicketFormData({...ticketFormData, correo: "" });
         }
-    }, [tipoCorreo]);
+    }, [ticketFormData.tipoCorreo]);
 
     useEffect(() => {
         if (ticketFormData.tipoMaquina === "SI") {
@@ -471,6 +466,30 @@ const TicketForm = () => {
                                         <label htmlFor="responsabilidadNo" className="form-check-label">No</label>
                                     </div>
                                 </div>
+                                <div className="col-md-6 mb-3">
+                                    <label className="form-label">Cómo se resuelve?</label>
+                                    <div>
+                                        <input type="radio" className="form-check-input" name="grupoResolutor"
+                                               id="resolutorN1"
+                                               value="SI" checked={ticketFormData.grupoResolutor === "n1"}
+                                               onChange={handleChange} onClick={()=>derivarTicket("n1")} required/>
+                                        <label htmlFor="resolutorN1" className="form-check-label">Cerrado en N1</label>
+
+                                        <input type="radio" className="form-check-input" name="grupoResolutor"
+                                               id="resolutorN2"
+                                               value="NO"
+                                               checked={ticketFormData.grupoResolutor === "n2"}
+                                               onChange={handleChange} onClick={()=>derivarTicket("n2")}  required/>
+                                        <label htmlFor="resolutorN2" className="form-check-label">Derivado a N2</label>
+
+                                        <input type="radio" className="form-check-input" name="grupoResolutor"
+                                               id="resolutorN3"
+                                               value="NO"
+                                               checked={ticketFormData.grupoResolutor === "n3"}
+                                               onChange={handleChange} onClick={()=>derivarTicket("n3")}  required/>
+                                        <label htmlFor="resolutorN3" className="form-check-label">Derivado a N3</label>
+                                    </div>
+                                </div>
                             </div>
 
 
@@ -482,237 +501,11 @@ const TicketForm = () => {
                                           onChange={handleChange} required/>
                             </div>
 
-                            <div className="gestion-derivaciones">
-                                {
-                                    n2Visibility &&
-                                    (
-                                        <div className="n2">
-                                            <div className="mb-3 n2">
-                                                <label htmlFor="horario" className="form-label d-flex align-items-center">
-                                                    Horario
-                                                    <div className="btn-group btn-group-sm ms-2" role="group">
-                                                        <input type="radio" className="btn-check" name="horarioRadio"
-                                                               id="horarioLaJ_V" autoComplete="off" onClick={ ()=>setHorario("LUNES A JUEVES 8:30 - 1 , VIERNES HASTA LAS 1")} />
-                                                        <label className="btn btn-outline-primary"
-                                                               htmlFor="horarioLaJ_V">LaJ+V</label>
-
-                                                        <input type="radio" className="btn-check" name="horarioRadio"
-                                                               id="horarioLaV" autoComplete="off" onClick={ ()=>setHorario("LUNES A VIERNES 8:30 - 1")}  />
-                                                        <label className="btn btn-outline-primary"
-                                                               htmlFor="horarioLaV">LaV</label>
-                                                    </div>
-                                                </label>
-                                                <input type="text" className="form-control form-control-sm mt-1" id="horario"
-                                                       name="horario" value={horario} onChange={(e) => setHorario(e.target.value)} required/>
-                                                <div className="col-md-6 mb-3 mt-3">
-                                                    <label htmlFor="correoElectronico" className="form-label">Correo Electrónico
-                                                        <div className="btn-group ms-2" role="group">
-                                                            <input type="radio" className="btn-check" name="tipoCorreo"
-                                                                   id="registroCivilRadio"
-                                                                   value="REGISTROCIVIL"
-                                                                   checked={tipoCorreo === "REGISTROCIVIL"}
-                                                                   onChange={handleChangeCE} required/>
-                                                            <label className="btn btn-outline-primary btn-sm"
-                                                                   htmlFor="registroCivilRadio">Registro
-                                                                Civil</label>
-
-                                                            <input type="radio" className="btn-check" name="tipoCorreo"
-                                                                   id="consuladoInstRadio" value="CONSULADO"
-                                                                   checked={tipoCorreo === "CONSULADO"}
-                                                                   onChange={handleChangeCE}/>
-                                                            <label className="btn btn-outline-primary btn-sm"
-                                                                   htmlFor="consuladoInstRadio">Consulado</label>
-
-                                                            <input type="radio" className="btn-check" name="tipoCorreo"
-                                                                   id="ministerioRadio"
-                                                                   value="MINISTERIO"
-                                                                   checked={tipoCorreo === "MINISTERIO"}
-                                                                   onChange={handleChangeCE}
-                                                            />
-                                                            <label className="btn btn-outline-primary btn-sm"
-                                                                   htmlFor="ministerioRadio">Ministerio</label>
-
-                                                            <input type="radio" className="btn-check" name="tipoCorreo" id="srceiRadio"
-                                                                   value="SRCEI"
-                                                                   checked={tipoCorreo === "SRCEI"}
-                                                                   onChange={handleChangeCE}/>
-                                                            <label className="btn btn-outline-primary btn-sm"
-                                                                   htmlFor="srceiRadio">SRCEI</label>
-
-                                                            <input type="radio" className="btn-check" name="tipoCorreo" id="siRadio"
-                                                                   value="SI"
-                                                                   checked={tipoCorreo === "SI"}
-                                                                   onChange={handleChangeCE} />
-                                                            <label className="btn btn-outline-primary btn-sm"
-                                                                   htmlFor="siRadio">S/I</label>
-                                                        </div>
-                                                    </label>
-                                                    <input type="text" className="form-control form-control-sm" id="correoElectronico"
-                                                           name="correoElectronico" value={correo} onChange={ (e) => setCorreo(e.target.value)} r/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )
-                                }
-                                {
-                                    n3Visibility &&
-                                    (
-                                        <div className="n3">
-                                            <div className="mb-3 n3">
-                                                <label htmlFor="horario" className="form-label d-flex align-items-center">
-                                                    Horario
-                                                    <div className="btn-group btn-group-sm ms-2" role="group">
-                                                        <input type="radio" className="btn-check" name="horarioRadio"
-                                                               id="horarioLaJ_V" autoComplete="off" onClick={ ()=>setHorario("LUNES A JUEVES 8:30 - 1 , VIERNES HASTA LAS 1")} />
-                                                        <label className="btn btn-outline-primary"
-                                                               htmlFor="horarioLaJ_V">LaJ+V</label>
-
-                                                        <input type="radio" className="btn-check" name="horarioRadio"
-                                                               id="horarioLaV" autoComplete="off" onClick={ ()=>setHorario("LUNES A VIERNES 8:30 - 1")} />
-                                                        <label className="btn btn-outline-primary"
-                                                               htmlFor="horarioLaV">LaV</label>
-                                                    </div>
-                                                </label>
-                                                <input type="text" className="form-control form-control-sm mt-1" id="horario"
-                                                       name="horario" value={horario} onChange={ (e) => setHorario(e.target.value)} required/>
-                                            </div>
-                                            <div className="mb-3 n3">
-                                                <label htmlFor="direccion" className="form-label">Dirección</label>
-                                                <input type="text" className="form-control form-control-sm" id="direccion"
-                                                       name="direccion" value={direccion} onChange={ (e) => setDireccion(e.target.value)} required/>
-
-                                            </div>
-                                            <div className="mb-3 n3">
-                                                <label htmlFor="rotulo" className="form-label">Rótulo</label>
-                                                <input type="text" className="form-control form-control-sm" id="rotulo"
-                                                       name="rotulo" value={rotulo} onChange={ (e) => setRotulo(e.target.value)} />
-                                            </div>
-                                            <div className="col-md-4 mb-3">
-                                                <label className="form-label">Falla Física</label>
-                                                <div>
-                                                    <input type="radio" className="form-check-input" name="fallaFisica"
-                                                           id="fallaFisicaSi" value="SI"
-                                                           checked={fallaFisica === "SI"}
-                                                           onChange={() => setFallaFisica("SI")} required/>
-                                                    <label htmlFor="fallaFisicaSi" className="form-check-label">Sí</label>
-                                                    <input type="radio" className="form-check-input" name="fallaFisica"
-                                                           id="fallaFisicaNo" value="NO"
-                                                           checked={fallaFisica === "NO"}
-                                                           onChange={() => setFallaFisica("NO")} />
-                                                    <label htmlFor="fallaFisicaNo" className="form-check-label">No</label>
-                                                </div>
-                                            </div>
-                                            <div className="col-md-6 mb-3 mt-3">
-                                                <label className="form-label" htmlFor="correoElectronico2">
-                                                    Correo Electrónico
-                                                </label>
-
-                                                <div className="btn-group ms-2 mb-2" role="group">
-                                                    <input
-                                                        type="radio"
-                                                        className="btn-check"
-                                                        name="tipoCorreo2"
-                                                        id="registroCivilRadio2"
-                                                        value="REGISTROCIVIL"
-                                                        checked={tipoCorreo === "REGISTROCIVIL"}
-                                                        onChange={handleChangeCE}
-                                                        required
-                                                    />
-                                                    <label
-                                                        className="btn btn-outline-primary btn-sm"
-                                                        htmlFor="registroCivilRadio2"
-                                                    >
-                                                        Registro Civil
-                                                    </label>
-
-                                                    <input
-                                                        type="radio"
-                                                        className="btn-check"
-                                                        name="tipoCorreo2"
-                                                        id="consuladoInstRadio2"
-                                                        value="CONSULADO"
-                                                        checked={tipoCorreo === "CONSULADO"}
-                                                        onChange={handleChangeCE}
-                                                    />
-                                                    <label
-                                                        className="btn btn-outline-primary btn-sm"
-                                                        htmlFor="consuladoInstRadio2"
-                                                    >
-                                                        Consulado
-                                                    </label>
-
-                                                    <input
-                                                        type="radio"
-                                                        className="btn-check"
-                                                        name="tipoCorreo2"
-                                                        id="ministerioRadio2"
-                                                        value="MINISTERIO"
-                                                        checked={tipoCorreo === "MINISTERIO"}
-                                                        onChange={handleChangeCE}
-                                                    />
-                                                    <label
-                                                        className="btn btn-outline-primary btn-sm"
-                                                        htmlFor="ministerioRadio2"
-                                                    >
-                                                        Ministerio
-                                                    </label>
-
-                                                    <input
-                                                        type="radio"
-                                                        className="btn-check"
-                                                        name="tipoCorreo2"
-                                                        id="srceiRadio2"
-                                                        value="SRCEI"
-                                                        checked={tipoCorreo === "SRCEI"}
-                                                        onChange={handleChangeCE}
-                                                    />
-                                                    <label
-                                                        className="btn btn-outline-primary btn-sm"
-                                                        htmlFor="srceiRadio2"
-                                                    >
-                                                        SRCEI
-                                                    </label>
-
-                                                    <input
-                                                        type="radio"
-                                                        className="btn-check"
-                                                        name="tipoCorreo2"
-                                                        id="siRadio2"
-                                                        value="SI"
-                                                        checked={tipoCorreo === "SI"}
-                                                        onChange={handleChangeCE}
-                                                    />
-                                                    <label className="btn btn-outline-primary btn-sm" htmlFor="siRadio2">
-                                                        S/I
-                                                    </label>
-                                                </div>
-
-                                                <input
-                                                    type="text"
-                                                    className="form-control form-control-sm"
-                                                    id="correoElectronico2"
-                                                    name="correoElectronico2"
-                                                    value={correo}
-                                                    onChange={(e) => setCorreo(e.target.value)}
-                                                    required
-                                                />
-                                            </div>
-                                        </div>
-                                    )
-                                }
-                            </div>
-
                             <div className="d-flex justify-content-around">
-                                <div className="resolver-sd">
-                                    <button type="submit" className="btn btn-success" onClick={ () => {setDerivacion(""); setN2Visibility(false); setN3Visibility(false)}}>Resolver sin derivar</button>
-                                </div>
                                 <div className="resolver-d">
-                                    <button type="submit" className="btn btn-success">Resolver</button> &nbsp; &nbsp;
-                                    <button type="button" className="btn btn-warning" onClick={ () => {setN2Visibility(!n2Visibility); setN3Visibility(false); setRotulo(null); setDireccion(null); setDerivacion("n2"); asignarOficina();}}>N2 Adm</button> &nbsp; &nbsp;
-                                    <button type="button" className="btn btn-warning" onClick={ () => {setN3Visibility(!n3Visibility); setN2Visibility(false); setDerivacion("n3");}}>N3 CECOM</button>
+                                    <button type="submit" className="btn btn-success">Resolver</button>
                                 </div>
                             </div>
-
                         </form>
                     </div>
                 </div>

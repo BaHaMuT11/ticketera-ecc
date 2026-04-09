@@ -19,7 +19,12 @@ export const TicketProvider = ({ children }) => {
         maquina: "",
         tipoMaquina: "ETF",
         responsabilidad: "NO",
-        pruebasMesa: ""
+        grupoResolutor: "n1",
+        correo: "",
+        tipoCorreo: "",
+        pruebasMesa: "",
+        direccion: "",
+        horario: ""
     });
     const [ticket, setTicket] = useState("")
     const [reporte, setReporte] = useState("");
