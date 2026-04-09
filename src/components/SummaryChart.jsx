@@ -52,18 +52,18 @@ const SummaryChart = () => {
                 nombre: "",
                 tipoOficina: "OFICINA",
                 oficina: "",
-                whatsapp: "",
                 problema: "",
                 celular: "",
                 correoElectronico: "",
                 tipoCorreo: "REGISTROCIVIL",
-                fonoFijo: "",
                 ip: "164.96.",
                 cuentaUsuario: "",
                 maquina: "",
                 tipoMaquina: "ETF",
                 responsabilidad: "NO",
-                pruebasMesa: ""
+                pruebasMesa: "",
+                direccion: "",
+                horario: ""
             });
             setSrceiFormData({
                 ...srceiFormData,

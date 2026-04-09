@@ -282,84 +282,115 @@ const TicketForm = () => {
                     </div>
                     <div className="card-body">
                         <form id="ticketForm" onSubmit={handleSubmit}>
-                            <div className="row">
-                                <div className="col-md-6 mb-3">
+                            <div className="row g-3">
+
+                                <div className="col-md-6">
                                     <label htmlFor="nombre" className="form-label">Nombre</label>
-                                    <input type="text" className="form-control form-control-sm" id="nombre"
-                                           name="nombre"
-                                           value={ticketFormData.nombre} onChange={handleChange} required/>
+                                    <input
+                                        type="text"
+                                        className="form-control form-control-sm"
+                                        id="nombre"
+                                        name="nombre"
+                                        value={ticketFormData.nombre}
+                                        onChange={handleChange}
+                                        required
+                                    />
                                 </div>
 
-                                <div className="col-md-6 mb-3">
-                                    <label htmlFor="oficina" className="form-label">Oficina
+                                <div className="col-md-6">
+                                    <label htmlFor="oficina" className="form-label">
+                                        Oficina
                                         <div className="btn-group ms-2" role="group">
-                                            <input type="radio" className="btn-check" name="tipoOficina"
-                                                   id="oficinaRadio"
-                                                   value="OFICINA" checked={ticketFormData.tipoOficina === "OFICINA"}
-                                                   onChange={handleChange} required/>
-                                            <label className="btn btn-outline-primary btn-sm"
-                                                   htmlFor="oficinaRadio">Oficina</label>
+                                            <input type="radio" className="btn-check" name="tipoOficina" id="oficinaRadio"
+                                                   value="OFICINA"
+                                                   checked={ticketFormData.tipoOficina === "OFICINA"}
+                                                   onChange={handleChange}
+                                                   required />
+                                            <label className="btn btn-outline-primary btn-sm" htmlFor="oficinaRadio">Oficina</label>
 
-                                            <input type="radio" className="btn-check" name="tipoOficina"
-                                                   id="consuladoRadio"
+                                            <input type="radio" className="btn-check" name="tipoOficina" id="consuladoRadio"
                                                    value="CONSULADO"
                                                    checked={ticketFormData.tipoOficina === "CONSULADO"}
-                                                   onChange={handleChange}
-                                                    />
-                                            <label className="btn btn-outline-primary btn-sm"
-                                                   htmlFor="consuladoRadio">Consulado</label>
+                                                   onChange={handleChange} />
+                                            <label className="btn btn-outline-primary btn-sm" htmlFor="consuladoRadio">Consulado</label>
                                         </div>
                                     </label>
-                                    <input type="text" className="form-control form-control-sm" id="oficina"
-                                           name="oficina" value={ticketFormData.oficina} onChange={handleChange}
-                                           required/>
-                                    <p>Nombre de oficina: <span className="nombre-maquina"> { lugar ? lugar : "No disponible aún"}</span></p>
+                                    <input
+                                        type="text"
+                                        className="form-control form-control-sm"
+                                        id="oficina"
+                                        name="oficina"
+                                        value={ticketFormData.oficina}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                    <p>Nombre de oficina: <span className="nombre-maquina">{lugar ? lugar : "No disponible aún"}</span></p>
                                 </div>
-                                
-                                <div className="col-md-6 mb-3">
+
+                                <div className="col-md-6">
                                     <label htmlFor="problema" className="form-label">Problema</label>
-                                    <input type="text" className="form-control form-control-sm" id="problema"
-                                           name="problema" value={ticketFormData.problema} onChange={handleChange}
-                                           required/>
+                                    <input
+                                        type="text"
+                                        className="form-control form-control-sm"
+                                        id="problema"
+                                        name="problema"
+                                        value={ticketFormData.problema}
+                                        onChange={handleChange}
+                                        required
+                                    />
                                 </div>
 
-                                <div className="col-md-6 mb-3">
+                                <div className="col-md-6">
                                     <label htmlFor="celular" className="form-label">Celular</label>
-                                    <input type="tel" className="form-control form-control-sm" id="celular"
-                                           name="celular"
-                                           value={ticketFormData.celular} onChange={handleChange}/>
+                                    <input
+                                        type="tel"
+                                        className="form-control form-control-sm"
+                                        id="celular"
+                                        name="celular"
+                                        value={ticketFormData.celular}
+                                        onChange={handleChange}
+                                    />
                                 </div>
 
-                                <div className="mb-3 n3">
+                                <div className="col-md-6 n3">
                                     <label htmlFor="horario" className="form-label d-flex align-items-center">
                                         Horario
                                         <div className="btn-group btn-group-sm ms-2" role="group">
-                                            <input type="radio" className="btn-check" name="horarioRadio"
-                                                   id="horarioLaJ_V" autoComplete="off" onClick={ ()=> setTicketFormData({...ticketFormData, horario: "LUNES A JUEVES 8:30 - 1 , VIERNES HASTA LAS 1" })} />
-                                            <label className="btn btn-outline-primary"
-                                                   htmlFor="horarioLaJ_V">LaJ+V</label>
+                                            <input type="radio" className="btn-check" name="horarioRadio" id="horarioLaJ_V"
+                                                   onClick={() => setTicketFormData({...ticketFormData, horario: "LUNES A JUEVES 8:30 - 1 , VIERNES HASTA LAS 1"})} />
+                                            <label className="btn btn-outline-primary" htmlFor="horarioLaJ_V">LaJ+V</label>
 
-                                            <input type="radio" className="btn-check" name="horarioRadio"
-                                                   id="horarioLaV" autoComplete="off" onClick={ ()=> setTicketFormData({...ticketFormData, horario: "LUNES A VIERNES 8:30 - 1" })} />
-                                            <label className="btn btn-outline-primary"
-                                                   htmlFor="horarioLaV">LaV</label>
+                                            <input type="radio" className="btn-check" name="horarioRadio" id="horarioLaV"
+                                                   onClick={() => setTicketFormData({...ticketFormData, horario: "LUNES A VIERNES 8:30 - 1"})} />
+                                            <label className="btn btn-outline-primary" htmlFor="horarioLaV">LaV</label>
                                         </div>
                                     </label>
-                                    <input type="text" className="form-control form-control-sm mt-1" id="horario"
-                                           name="horario" value={ticketFormData.horario} onChange={handleChange} required/>
+                                    <input
+                                        type="text"
+                                        className="form-control form-control-sm"
+                                        id="horario"
+                                        name="horario"
+                                        value={ticketFormData.horario}
+                                        onChange={handleChange}
+                                        placeholder="Obligatorio N2 y N3"
+                                    />
                                 </div>
-                                <div className="mb-3 n3">
+
+                                <div className="col-md-6 n3">
                                     <label htmlFor="direccion" className="form-label">Dirección</label>
-                                    <input type="text" className="form-control form-control-sm" id="direccion"
-                                           name="direccion" value={ticketFormData.direccion} onChange={handleChange} required/>
-
+                                    <input
+                                        type="text"
+                                        className="form-control form-control-sm"
+                                        id="direccion"
+                                        name="direccion"
+                                        value={ticketFormData.direccion}
+                                        onChange={handleChange}
+                                        placeholder="Obligatorio N3 y N2 SRCeI"
+                                    />
                                 </div>
 
-
-                                <div className="col-md-6 mb-3 mt-3">
-                                    <label className="form-label" htmlFor="correoElectronico2">
-                                        Correo Electrónico
-                                    </label>
+                                <div className="col-md-6">
+                                    <label className="form-label" htmlFor="correoElectronico2">Correo Electrónico</label>
 
                                     <div className="btn-group ms-2 mb-2" role="group">
                                         <input
@@ -370,7 +401,6 @@ const TicketForm = () => {
                                             value="REGISTROCIVIL"
                                             checked={ticketFormData.tipoCorreo === "REGISTROCIVIL"}
                                             onChange={handleChange}
-                                            required
                                         />
                                         <label
                                             className="btn btn-outline-primary btn-sm"
@@ -443,7 +473,6 @@ const TicketForm = () => {
                                             S/I
                                         </label>
                                     </div>
-
                                     <input
                                         type="text"
                                         className="form-control form-control-sm"
@@ -451,35 +480,11 @@ const TicketForm = () => {
                                         name="correo"
                                         value={ticketFormData.correo}
                                         onChange={handleChange}
-                                        required
+                                        placeholder="Obligatorio N2 y N3"
                                     />
                                 </div>
 
-                                <div className="col-md-6 mb-3">
-                                    <label htmlFor="celular" className="form-label">Celular</label>
-                                    <input
-                                        type="tel"
-                                        className="form-control form-control-sm"
-                                        id="celular"
-                                        name="celular"
-                                        value={ticketFormData.celular}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-
-                                <div className="col-md-6 mb-3">
-                                    <label htmlFor="fonoFijo" className="form-label">Fono Fijo</label>
-                                    <input
-                                        type="tel"
-                                        className="form-control form-control-sm"
-                                        id="fonoFijo"
-                                        name="fonoFijo"
-                                        value={ticketFormData.fonoFijo}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-
-                                <div className="col-md-6 mb-3">
+                                <div className="col-md-6">
                                     <label htmlFor="ip" className="form-label">IP</label>
                                     <div className="d-flex">
                                         <input
@@ -492,48 +497,26 @@ const TicketForm = () => {
                                             required
                                         />
                                         &nbsp;
-                                        <button
-                                            className="boton-verde-sm"
-                                            type="button"
-                                            onClick={validarDesdeIp}
-                                        >
+                                        <button className="boton-verde-sm" type="button" onClick={validarDesdeIp}>
                                             <i className="bi bi-check-lg"></i>
                                         </button>
                                     </div>
                                 </div>
 
-
-
-
-                                <div className="col-md-6 mb-3">
-                                    <label htmlFor="fonoFijo" className="form-label">Fono Fijo</label>
-                                    <input type="tel" className="form-control form-control-sm" id="fonoFijo"
-                                           name="fonoFijo" value={ticketFormData.fonoFijo}
-                                           onChange={handleChange}/>
-                                </div>
-
-                                <div className="col-md-6 mb-3">
-                                    <label htmlFor="ip" className="form-label">IP</label>
-                                    <div className="d-flex">
-                                        <input type="text" className="form-control form-control-sm" id="ip" name="ip"
-                                               value={ticketFormData.ip} onChange={handleChange} required/> &nbsp;
-                                        <button className="boton-verde-sm" type="button" onClick={validarDesdeIp} >
-                                            <i className="bi bi-check-lg"></i>
-                                        </button>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div className="row mb-2">
-                                <div className="col-md-6 mb-3">
+                                <div className="col-md-6">
                                     <label htmlFor="cuentaUsuario" className="form-label">Cuenta de Usuario</label>
-                                    <input type="text" className="form-control form-control-sm" id="cuentaUsuario"
-                                           name="cuentaUsuario" value={ticketFormData.cuentaUsuario}
-                                           onChange={handleChange} required/>
+                                    <input
+                                        type="text"
+                                        className="form-control form-control-sm"
+                                        id="cuentaUsuario"
+                                        name="cuentaUsuario"
+                                        value={ticketFormData.cuentaUsuario}
+                                        onChange={handleChange}
+                                        required
+                                    />
                                 </div>
 
-                                <div className="col-md-6 mb-3">
+                                <div className="col-md-6">
                                     <label htmlFor="maquina" className="form-label">Máquina
                                         <div className="btn-group ms-2" role="group">
                                             <input type="radio" className="btn-check" name="tipoMaquina" id="etfRadio"
@@ -613,7 +596,8 @@ const TicketForm = () => {
                                     </div>
                                     <p>Nombre de máquina: <span className="nombre-maquina">{ isValidString(ticketFormData.maquina) && formTransform(ticketFormData.tipoMaquina) !== "SI" ? (formTransform(ticketFormData.tipoMaquina) + "-" + formTransform(ticketFormData.maquina)): "No disponible aún"}</span></p>
                                 </div>
-                                <div className="col-md-6 mb-3">
+
+                                <div className="col-12">
                                     <label className="form-label">Es de responsabilidad del SRCeI?</label>
                                     <div>
                                         <input type="radio" className="form-check-input" name="responsabilidad"
@@ -629,44 +613,49 @@ const TicketForm = () => {
                                         <label htmlFor="responsabilidadNo" className="form-check-label">No</label>
                                     </div>
                                 </div>
-                                <div className="col-md-6 mb-3">
+
+                                <div className="col-12">
                                     <label className="form-label">Cómo se resuelve?</label>
                                     <div>
                                         <input type="radio" className="form-check-input" name="grupoResolutor"
                                                id="resolutorN1"
-                                               value="SI" checked={ticketFormData.grupoResolutor === "n1"}
+                                               value="n1" checked={ticketFormData.grupoResolutor === "n1"}
                                                onChange={handleChange} onClick={()=>derivarTicket("n1")} required/>
                                         <label htmlFor="resolutorN1" className="form-check-label">Cerrado en N1</label>
 
                                         <input type="radio" className="form-check-input" name="grupoResolutor"
                                                id="resolutorN2"
-                                               value="NO"
+                                               value="n2"
                                                checked={ticketFormData.grupoResolutor === "n2"}
                                                onChange={handleChange} onClick={()=>derivarTicket("n2")}  required/>
                                         <label htmlFor="resolutorN2" className="form-check-label">Derivado a N2</label>
 
                                         <input type="radio" className="form-check-input" name="grupoResolutor"
                                                id="resolutorN3"
-                                               value="NO"
+                                               value="n3"
                                                checked={ticketFormData.grupoResolutor === "n3"}
                                                onChange={handleChange} onClick={()=>derivarTicket("n3")}  required/>
                                         <label htmlFor="resolutorN3" className="form-check-label">Derivado a N3</label>
                                     </div>
                                 </div>
-                            </div>
 
+                                <div className="col-12">
+                                    <label htmlFor="pruebasMesa" className="form-label">Pruebas de la Mesa</label>
+                                    <textarea
+                                        className="form-control form-control-sm"
+                                        id="pruebasMesa"
+                                        name="pruebasMesa"
+                                        rows="3"
+                                        value={ticketFormData.pruebasMesa}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
 
-                            <div className="mb-3">
-                                <label htmlFor="pruebasMesa" className="form-label">Pruebas de la Mesa</label>
-                                <textarea className="form-control form-control-sm" id="pruebasMesa" name="pruebasMesa"
-                                          rows="3"
-                                          value={ticketFormData.pruebasMesa}
-                                          onChange={handleChange} required/>
-                            </div>
-
-                            <div className="d-flex justify-content-around">
-                                <div className="resolver-d">
-                                    <button type="submit" className="btn btn-success">Resolver</button>
+                                <div className="col-12 d-flex justify-content-center mt-3">
+                                    <button type="submit" className="btn btn-success">
+                                        Resolver
+                                    </button>
                                 </div>
                             </div>
                         </form>
