@@ -315,19 +315,7 @@ const TicketForm = () => {
                                            required/>
                                     <p>Nombre de oficina: <span className="nombre-maquina"> { lugar ? lugar : "No disponible aún"}</span></p>
                                 </div>
-
-                                {
-                                    ticketFormData.tipoOficina !== "OFICINA" &&
-                                    (
-                                        <div className="col-md-6 mb-3">
-                                            <label htmlFor="whatsapp" className="form-label">Whatsapp</label>
-                                            <input type="text" className="form-control form-control-sm" id="whatsapp"
-                                                   name="whatsapp" value={ticketFormData.whatsapp}
-                                                   onChange={handleChange}
-                                            />
-                                        </div>
-                                    )
-                                }
+                                
                                 <div className="col-md-6 mb-3">
                                     <label htmlFor="problema" className="form-label">Problema</label>
                                     <input type="text" className="form-control form-control-sm" id="problema"
