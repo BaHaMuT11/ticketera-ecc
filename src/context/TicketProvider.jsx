@@ -19,7 +19,7 @@ export const TicketProvider = ({ children }) => {
         responsabilidad: "NO",
         grupoResolutor: "n1",
         correo: "",
-        tipoCorreo: "REGISTROCIVIL",
+        tipoCorreo: "SI",
         pruebasMesa: "",
         direccion: "",
         horario: ""

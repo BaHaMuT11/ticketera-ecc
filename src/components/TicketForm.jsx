@@ -254,11 +254,7 @@ const TicketForm = () => {
     }, [ticketFormData.tipoMaquina]);
 
     useEffect(() => {
-        if (ticketFormData.tipoCorreo === "SI") {
-            setTicketFormData({...ticketFormData, correo: "S/I" });
-        } else {
-            setTicketFormData({...ticketFormData, correo: "" });
-        }
+        setTicketFormData({...ticketFormData, correo: "" });
     }, [ticketFormData.tipoCorreo]);
 
     useEffect(() => {
@@ -391,6 +387,22 @@ const TicketForm = () => {
                                             type="radio"
                                             className="btn-check"
                                             name="tipoCorreo"
+                                            id="siRadio2"
+                                            value="SI"
+                                            checked={ticketFormData.tipoCorreo === "SI"}
+                                            onChange={handleChange}
+                                        />
+                                        <label
+                                            className="btn btn-outline-primary btn-sm"
+                                            htmlFor="siRadio2"
+                                        >
+                                            S/I
+                                        </label>
+
+                                        <input
+                                            type="radio"
+                                            className="btn-check"
+                                            name="tipoCorreo"
                                             id="registroCivilRadio2"
                                             value="REGISTROCIVIL"
                                             checked={ticketFormData.tipoCorreo === "REGISTROCIVIL"}
@@ -449,22 +461,6 @@ const TicketForm = () => {
                                             htmlFor="srceiRadio2"
                                         >
                                             SRCEI
-                                        </label>
-
-                                        <input
-                                            type="radio"
-                                            className="btn-check"
-                                            name="tipoCorreo"
-                                            id="siRadio2"
-                                            value="SI"
-                                            checked={ticketFormData.tipoCorreo === "SI"}
-                                            onChange={handleChange}
-                                        />
-                                        <label
-                                            className="btn btn-outline-primary btn-sm"
-                                            htmlFor="siRadio2"
-                                        >
-                                            S/I
                                         </label>
                                     </div>
                                     <input
