@@ -89,18 +89,12 @@ const TicketForm = () => {
         sb.appendLine("NOMBRE DE MÁQUINA: " + construirMaquina());
         sb.appendLine("NOMBRE: " + formTransform(formTicket.nombre));
         sb.appendLine("CELULAR: " + formTransform(formTicket.celular));
-
-        if (derivacion !== "") {
-            sb.appendLine("CORREO ELECTRONICO: " + construirCorreo());
-        }
-
+        sb.appendLine("CORREO ELECTRONICO: " + construirCorreo());
         sb.appendLine("OFICINA: " + construirOficina());
         sb.appendLine("IP: " + formTransform(formTicket.ip));
         sb.appendLine("CUENTA USUARIO: " + formTransform(formTicket.cuentaUsuario));
         sb.appendLine("PROBLEMA_PRE-DIAGNOSTICO: " + formTransform(formTicket.problema));
         sb.appendLine("PRUEBA DE LA MESA: " + formTransform(formTicket.pruebasMesa));
-
-        // Siempre visibles
         sb.appendLine("DIRECCIÓN: " + formTransform(formTicket.direccion));
         sb.appendLine("HORARIO DE ATENCIÓN: " + formTransform(formTicket.horario));
 

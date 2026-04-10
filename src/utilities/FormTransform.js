@@ -49,7 +49,8 @@ export function traducirOficina(ofiTexto) {
         "MALL PLAZA SUR SO": "SAN BERNARDO SO MALL PLAZA SUR",
         "BACKOFFICE CENTRAL": "BACKOFFICE CATEDRAL",
         "TALCA SO MALL PLAZA MAULE": "SO MALL PLAZA MAULE",
-        "SAN VICENTE DE TAGUA-TAGUA": "SAN VICENTE DE TAGUA TAGUA"
+        "SAN VICENTE DE TAGUA-TAGUA": "SAN VICENTE DE TAGUA TAGUA",
+        "CURICÓ SO SARMIENTO": "CURICÓ SUBOFICINA SARMIENTO"
     };
 
     let textoUpper = ofiTexto.toUpperCase().trim();
