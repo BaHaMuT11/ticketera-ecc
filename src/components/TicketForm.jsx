@@ -115,7 +115,7 @@ const TicketForm = () => {
                 nombre: formTransform(ticketFormData.nombre),
                 correo: correoExport,
                 estacion: maquinaExport,
-                numero: formTransform(ticketFormData.celular) + " - " + formTransform(ticketFormData.fonoFijo),
+                numero: formTransform(ticketFormData.celular),
                 responsabilidad: formTransform(ticketFormData.responsabilidad),
                 oficina: oficinaExport,
                 derivacion: formTransform(derivacion),
