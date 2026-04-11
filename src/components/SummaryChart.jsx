@@ -27,6 +27,7 @@ const SummaryChart = () => {
                 ...ticketFormData,
                 problema: "",
                 pruebasMesa: "",
+                grupoResolutor: "n1",
                 responsabilidad: "NO"
             });
             setTicket("");
@@ -55,7 +56,7 @@ const SummaryChart = () => {
                 problema: "",
                 celular: "",
                 correoElectronico: "",
-                tipoCorreo: "REGISTROCIVIL",
+                tipoCorreo: "SI",
                 ip: "164.96.",
                 cuentaUsuario: "",
                 maquina: "",
@@ -63,6 +64,7 @@ const SummaryChart = () => {
                 responsabilidad: "NO",
                 pruebasMesa: "",
                 direccion: "",
+                grupoResolutor: "n1",
                 horario: ""
             });
             setSrceiFormData({
@@ -93,14 +95,17 @@ const SummaryChart = () => {
                 problema: "",
                 celular: "",
                 correoElectronico: "",
-                tipoCorreo: "REGISTROCIVIL",
+                tipoCorreo: "SI",
                 fonoFijo: "",
                 ip: "164.96.",
                 cuentaUsuario: "",
                 maquina: "",
                 tipoMaquina: "ETF",
                 responsabilidad: "NO",
-                pruebasMesa: ""
+                pruebasMesa: "",
+                direccion: "",
+                grupoResolutor: "n1",
+                horario: ""
             });
             setSrceiFormData({
                 ...srceiFormData,
@@ -226,7 +231,7 @@ const SummaryChart = () => {
                                         <td>{llamado.oficina}</td>
                                         <td>{atencion.ticket}</td>
                                         <td>{atencion.funcionario}</td>
-                                        <td>{atencion.resolucion}</td>
+                                        <td>{atencion.resolucion === "n1" || atencion.resolucion === ""  || atencion.resolucion === "N1" ? "RESUELTO" : atencion.resolucion}</td>
                                         <td>{atencion.responsabilidad}</td>
                                         <td>{atencion.fecha}</td>
                                     </tr>
