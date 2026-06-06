@@ -95,8 +95,10 @@ const TicketForm = () => {
         sb.appendLine("CUENTA USUARIO: " + formTransform(formTicket.cuentaUsuario));
         sb.appendLine("PROBLEMA_PRE-DIAGNOSTICO: " + formTransform(formTicket.problema));
         sb.appendLine("PRUEBA DE LA MESA: " + formTransform(formTicket.pruebasMesa));
-        sb.appendLine("DIRECCIÓN: " + formTransform(formTicket.direccion));
-        sb.appendLine("HORARIO DE ATENCIÓN: " + formTransform(formTicket.horario));
+        if (formTicket.grupoResolutor !== "n1") {
+            sb.appendLine("DIRECCIÓN: " + formTransform(formTicket.direccion));
+            sb.appendLine("HORARIO DE ATENCIÓN: " + formTransform(formTicket.horario));
+        }
 
         return sb.toString();
     };

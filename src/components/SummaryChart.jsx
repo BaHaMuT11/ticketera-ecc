@@ -27,8 +27,8 @@ const SummaryChart = () => {
                 ...ticketFormData,
                 problema: "",
                 pruebasMesa: "",
-                grupoResolutor: "n1",
-                responsabilidad: "NO"
+                grupoResolutor: "",
+                responsabilidad: ""
             });
             setTicket("");
             setSrceiTicket("");
@@ -61,10 +61,10 @@ const SummaryChart = () => {
                 cuentaUsuario: "",
                 maquina: "",
                 tipoMaquina: "ETF",
-                responsabilidad: "NO",
+                responsabilidad: "",
+                grupoResolutor: "",
                 pruebasMesa: "",
                 direccion: "",
-                grupoResolutor: "n1",
                 horario: ""
             });
             setSrceiFormData({
@@ -101,10 +101,10 @@ const SummaryChart = () => {
                 cuentaUsuario: "",
                 maquina: "",
                 tipoMaquina: "ETF",
-                responsabilidad: "NO",
+                responsabilidad: "",
+                grupoResolutor: "",
                 pruebasMesa: "",
                 direccion: "",
-                grupoResolutor: "n1",
                 horario: ""
             });
             setSrceiFormData({

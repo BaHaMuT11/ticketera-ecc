@@ -7,7 +7,7 @@ const Header = () => {
                 <h1 className="display-6 mb-0">
                     <strong>TICKETERA ECC</strong>
                 </h1>
-                <span className="text-danger fw-bold" style={{ fontSize: "1rem" }}>V3.1.1</span>
+                <span className="text-danger fw-bold" style={{ fontSize: "1rem" }}>V3.2.0</span>
             </div>
             <h6 className="mb-0">By BaHaMuT</h6>
         </div>
