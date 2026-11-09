@@ -1,14 +1,20 @@
+import {Outlet, useLocation} from "react-router";
 import Header from "../components/Header.jsx";
-import {Outlet} from "react-router";
+import {Sidebar} from "../components/layout/Sidebar.jsx";
+import {indiceDePantalla} from "../components/layout/pantallas.js";
 
 const Layout = () => {
+    const {pathname} = useLocation();
+    const pasoActual = indiceDePantalla(pathname);
+
     return (
-        <div className="container">
-            <div className="row mb-2">
-                <Header />
-            </div>
-            <div className="row mb-2">
-                <Outlet />
+        <div className="flex min-h-screen">
+            <Sidebar pasoActual={pasoActual}/>
+            <div className="min-w-0 flex-1">
+                <Header pasoActual={pasoActual}/>
+                <main className="mx-auto max-w-[1280px] px-5 py-6 sm:px-8 sm:py-7">
+                    <Outlet/>
+                </main>
             </div>
         </div>
     );

@@ -1,12 +1,24 @@
+import {useContext, useEffect, useId, useState} from "react";
 import PropTypes from "prop-types";
-import {useEffect, useState} from "react";
+import {Copy} from "lucide-react";
+import {ToastContext} from "../../context/ToastProvider.jsx";
+import {Slip} from "../ui/Slip.jsx";
+import {Button} from "../ui/Button.jsx";
 
 const TicketBody = (props) => {
 
-    const handleCopy = () => {
-        navigator.clipboard.writeText(text)
-            .then(() => alert("Ticket copiado al portapapeles ;)"))
-            .catch((err) => console.error("Error al copiar :(", err));
+    const {toast} = useContext(ToastContext);
+    const idTexto = useId();
+    const [text, setText] = useState(props.text);
+
+    const handleCopy = async () => {
+        try {
+            await navigator.clipboard.writeText(text);
+            toast("Ticket copiado al portapapeles ;)");
+        } catch (err) {
+            console.error("Error al copiar :(", err);
+            toast("No se pudo copiar. Selecciona el texto y cópialo a mano.", "error");
+        }
     };
 
     const onChange = (e) => {
@@ -14,33 +26,35 @@ const TicketBody = (props) => {
         props.setter(e.target.value);
     }
 
-    const[text, setText] = useState(props.text);
-
     useEffect(() => {
         setText(props.text);
     }, [props.text]);
 
-    const color = "card-header " + props.bootstrapColor + " d-flex justify-content-between align-items-center";
-
     return (
-        <div className="card">
-            <div className={color}>
-                <h5 className="mb-0">{props.title}</h5>
-                <button className="btn btn-outline-light btn-sm" onClick={handleCopy}>Copiar!</button>
-            </div>
-            <div className="card-body">
-                <textarea className="form-control" rows={props.rows} value={text} onChange={onChange}/>
-            </div>
-        </div>
+        <Slip
+            title={props.title}
+            sub={props.sub}
+            action={<Button variant="ghost" size="sm" icon={Copy} onClick={handleCopy}>{props.copyLabel ?? "Copiar"}</Button>}>
+            <label htmlFor={idTexto} className="sr-only">{props.title}</label>
+            <textarea
+                id={idTexto}
+                className="block w-full resize-y bg-transparent font-mono text-[12.5px] leading-[1.7] text-ink placeholder:text-ink-3"
+                rows={props.rows}
+                value={text}
+                placeholder={props.placeholder}
+                onChange={onChange}/>
+        </Slip>
     );
 };
 
 TicketBody.propTypes = {
     title: PropTypes.string.isRequired,
+    sub: PropTypes.node,
     text: PropTypes.string.isRequired,
     setter: PropTypes.func.isRequired,
     rows: PropTypes.number.isRequired,
-    bootstrapColor: PropTypes.string.isRequired
+    copyLabel: PropTypes.string,
+    placeholder: PropTypes.string
 }
 
 export default TicketBody;

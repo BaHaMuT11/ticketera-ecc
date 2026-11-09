@@ -3,12 +3,12 @@ import {TicketContext} from "../../context/TicketProvider.jsx";
 import {formTransform} from "../../utilities/FormTransform.js";
 import {StringBuilder} from "../../utilities/StringBuilder.js";
 import PropTypes from "prop-types";
+import {Field, Input, Select} from "../ui/Field.jsx";
+import {Button} from "../ui/Button.jsx";
 
 const OficioModal = (props) => {
 
-    const {oficioForm, setOficioForm} = useContext(TicketContext);
-    const {setOficio} = useContext(TicketContext);
-    const {ticket, setTicket} = useContext(TicketContext);
+    const {oficioForm, setOficioForm, setOficio, ticket, setTicket} = useContext(TicketContext);
 
     const handleChange = (e) => {
         const {name,value,type,checked} = e.target;
@@ -32,7 +32,6 @@ const OficioModal = (props) => {
         const sb2 = new StringBuilder(ticket);
 
         const ofi = sb.toString();
-        console.log("oficina" + ofi)
         setOficio(ofi);
         sb2.appendLine(ofi);
         setTicket(sb2.toString());
@@ -41,77 +40,37 @@ const OficioModal = (props) => {
     };
 
     return (
-        <>
-            <form onSubmit={handleSubmit}>
-                <div className="modal-body">
-                    <div className="mb-3">
-                        <label htmlFor="numeroOficio" className="form-label">N° DE OFICIO</label>
-                        <input
-                            type="text"
-                            className="form-control form-control-sm"
-                            id="numeroOficio"
-                            name="numeroOficio"
-                            value={oficioForm.numeroOficio}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="tipoOficio" className="form-label">TIPO DE OFICIO</label>
-                        <select
-                            className="form-select form-select-sm"
-                            id="tipoOficio"
-                            name="tipoOficio"
-                            value={oficioForm.tipoOficio}
-                            onChange={handleChange}
-                        >
-                            <option value="CÉDULA">CÉDULA</option>
-                            <option value="PASAPORTE">PASAPORTE</option>
-                            <option value="CÉDULA Y PASAPORTE">MIXTO</option>
-                        </select>
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="anioOficio" className="form-label">AÑO OFICIO</label>
-                        <input
-                            type="number"
-                            className="form-control form-control-sm"
-                            id="anioOficio"
-                            name="anioOficio"
-                            value={oficioForm.anioOficio}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="codigoOficina" className="form-label">COD. OFICINA ORIGEN</label>
-                        <input
-                            type="text"
-                            className="form-control form-control-sm"
-                            id="codigoOficina"
-                            name="codigoOficina"
-                            value={oficioForm.codigoOficina}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="run" className="form-label">
-                            RUN <span className="text-muted">(Cualquiera que esté en el oficio)</span>
-                        </label>
-                        <input
-                            type="text"
-                            className="form-control form-control-sm"
-                            id="run"
-                            name="run"
-                            value={oficioForm.run}
-                            onChange={handleChange}
-                        />
-                    </div>
+        <form onSubmit={handleSubmit}>
+            <div className="space-y-4 px-6 py-5">
+                <Field label="N° de oficio" htmlFor="numeroOficio">
+                    <Input id="numeroOficio" name="numeroOficio" mono
+                           value={oficioForm.numeroOficio} onChange={handleChange}/>
+                </Field>
+                <Field label="Tipo de oficio" htmlFor="tipoOficio">
+                    <Select id="tipoOficio" name="tipoOficio" value={oficioForm.tipoOficio} onChange={handleChange}>
+                        <option value="CÉDULA">CÉDULA</option>
+                        <option value="PASAPORTE">PASAPORTE</option>
+                        <option value="CÉDULA Y PASAPORTE">MIXTO</option>
+                    </Select>
+                </Field>
+                <div className="grid grid-cols-2 gap-4">
+                    <Field label="Año del oficio" htmlFor="anioOficio">
+                        <Input id="anioOficio" name="anioOficio" type="number" mono
+                               value={oficioForm.anioOficio} onChange={handleChange}/>
+                    </Field>
+                    <Field label="Cód. oficina origen" htmlFor="codigoOficina">
+                        <Input id="codigoOficina" name="codigoOficina" mono
+                               value={oficioForm.codigoOficina} onChange={handleChange}/>
+                    </Field>
                 </div>
-                <div className="modal-footer">
-                    <button type="submit" className="btn btn-primary">
-                        Agregar oficio
-                    </button>
-                </div>
-            </form>
-        </>
+                <Field label="RUN" htmlFor="run" hint="Cualquiera que esté en el oficio">
+                    <Input id="run" name="run" mono value={oficioForm.run} onChange={handleChange}/>
+                </Field>
+            </div>
+            <div className="flex justify-end border-t border-line px-6 py-4">
+                <Button type="submit">Agregar oficio</Button>
+            </div>
+        </form>
     );
 };
 

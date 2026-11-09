@@ -1,4 +1,5 @@
 import {createContext, useState} from "react";
+import {TICKET_INICIAL} from "../utilities/EstadosIniciales.js";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const TicketContext = createContext(null);
@@ -6,24 +7,7 @@ export const TicketContext = createContext(null);
 
 // eslint-disable-next-line react/prop-types
 export const TicketProvider = ({ children }) => {
-    const [ticketFormData, setTicketFormData] = useState({
-        nombre: "",
-        tipoOficina: "OFICINA",
-        oficina: "",
-        problema: "",
-        celular: "",
-        ip: "164.96.",
-        cuentaUsuario: "",
-        maquina: "",
-        tipoMaquina: "ETF",
-        responsabilidad: "",
-        grupoResolutor: "",
-        correo: "",
-        tipoCorreo: "SI",
-        pruebasMesa: "",
-        direccion: "",
-        horario: ""
-    });
+    const [ticketFormData, setTicketFormData] = useState({...TICKET_INICIAL});
     const [ticket, setTicket] = useState("")
     const [reporte, setReporte] = useState("");
     const [derivacion, setDerivacion] = useState("")
@@ -40,7 +24,7 @@ export const TicketProvider = ({ children }) => {
     const [oficioForm, setOficioForm] = useState({
         numeroOficio: "",
         tipoOficio: "CÉDULA",
-        anioOficio: "2025",
+        anioOficio: String(new Date().getFullYear()),
         codigoOficina: "",
         run: ""
     });

@@ -1,22 +1,31 @@
-import {useContext} from "react";
+import {useContext, useState} from "react";
 import {UserContext} from "../context/UserProvider.jsx";
 import {useNavigate} from "react-router";
 import {TicketContext} from "../context/TicketProvider.jsx";
 import {ResposibilityContext} from "../context/ResponsibilityProvider.jsx";
+import {ToastContext} from "../context/ToastProvider.jsx";
+import {Plus, Power, User, Info} from "lucide-react";
+import {Panel} from "./ui/Panel.jsx";
+import {Button} from "./ui/Button.jsx";
+import {ConfirmDialog} from "./ui/ConfirmDialog.jsx";
+import ResolucionChip from "./ResolucionChip.jsx";
+import {resolucionNormalizada} from "../utilities/Atencion.js";
+import {exportarLlamadosAExcel} from "../utilities/ExportExcel.js";
+import {LLAMADO_INICIAL, SRCEI_INICIAL, TICKET_INICIAL} from "../utilities/EstadosIniciales.js";
+
+const ENCABEZADOS = ["Llamado", "Atención", "Oficina", "Ticket", "Funcionario", "Resolución", "Del SRCeI", "Fecha"];
 
 const SummaryChart = () => {
 
-    const {llamados, setLlamados} = useContext(UserContext);
-    const {setLlamadoActivo} = useContext(UserContext);
-    const {setEsLlamadoNuevo} = useContext(UserContext);
-    const {setIdLLamadoActiva} = useContext(UserContext);
+    const {userName, llamados, setLlamados, setLlamadoActivo, setEsLlamadoNuevo, setIdLLamadoActiva} = useContext(UserContext);
 
-    const {ticketFormData, setTicketFormData} = useContext(TicketContext);
-    const {setReporte} = useContext(TicketContext);
-    const {setTicket} = useContext(TicketContext);
+    const {ticketFormData, setTicketFormData, setReporte, setTicket, setDerivacion} = useContext(TicketContext);
 
-    const {setSrceiTicket} = useContext(ResposibilityContext);
-    const {srceiFormData, setSrceiFormData} = useContext(ResposibilityContext)
+    const {setSrceiTicket, setSrceiFormData} = useContext(ResposibilityContext);
+
+    const {toast} = useContext(ToastContext);
+
+    const [confirmarCierre, setConfirmarCierre] = useState(false);
 
     const navigate = useNavigate();
 
@@ -31,52 +40,18 @@ const SummaryChart = () => {
                 responsabilidad: ""
             });
             setTicket("");
+            setDerivacion("");
             setSrceiTicket("");
-            setSrceiFormData({
-                ...srceiFormData,
-                nombreTicket: "",
-                servicio: "Impresoras",
-                sintoma: "",
-                diagnostico: "",
-                otros: "",
-                region: "",
-                taxonomia: ""
-            });
+            setSrceiFormData({...SRCEI_INICIAL});
             setReporte("");
         }
         if (accion === "limpiarLlamado") {
             setTicket("");
+            setDerivacion("");
             setSrceiTicket("");
             setEsLlamadoNuevo(true);
-            setTicketFormData({
-                ...ticketFormData,
-                nombre: "",
-                tipoOficina: "OFICINA",
-                oficina: "",
-                problema: "",
-                celular: "",
-                correoElectronico: "",
-                tipoCorreo: "SI",
-                ip: "164.96.",
-                cuentaUsuario: "",
-                maquina: "",
-                tipoMaquina: "ETF",
-                responsabilidad: "",
-                grupoResolutor: "",
-                pruebasMesa: "",
-                direccion: "",
-                horario: ""
-            });
-            setSrceiFormData({
-                ...srceiFormData,
-                nombreTicket: "",
-                servicio: "Impresoras",
-                sintoma: "",
-                diagnostico: "",
-                otros: "",
-                region: "",
-                taxonomia: ""
-            });
+            setTicketFormData({...TICKET_INICIAL});
+            setSrceiFormData({...SRCEI_INICIAL});
             setLlamadoActivo(() => ({
                 oficina: "",
                 atenciones: []
@@ -85,45 +60,13 @@ const SummaryChart = () => {
         }
         if (accion === "cerrarDia") {
             setTicket("");
+            setDerivacion("");
             setSrceiTicket("");
-            setTicketFormData({
-                ...ticketFormData,
-                nombre: "",
-                tipoOficina: "OFICINA",
-                oficina: "",
-                whatsapp: "",
-                problema: "",
-                celular: "",
-                correoElectronico: "",
-                tipoCorreo: "SI",
-                fonoFijo: "",
-                ip: "164.96.",
-                cuentaUsuario: "",
-                maquina: "",
-                tipoMaquina: "ETF",
-                responsabilidad: "",
-                grupoResolutor: "",
-                pruebasMesa: "",
-                direccion: "",
-                horario: ""
-            });
-            setSrceiFormData({
-                ...srceiFormData,
-                nombreTicket: "",
-                servicio: "Impresoras",
-                sintoma: "",
-                diagnostico: "",
-                otros: "",
-                region: "",
-                taxonomia: ""
-            });
+            setTicketFormData({...TICKET_INICIAL});
+            setSrceiFormData({...SRCEI_INICIAL});
             setReporte("");
             setLlamados([]);
-            setLlamadoActivo({
-                id: 0,
-                oficina: "",
-                atenciones: []
-            });
+            setLlamadoActivo({...LLAMADO_INICIAL});
             setIdLLamadoActiva(-1)
             setEsLlamadoNuevo(true)
         }
@@ -139,119 +82,106 @@ const SummaryChart = () => {
         navigate("/baha-ticket");
     };
 
-    const handleCerrarDia = () => {
-        /*
-        const nuevosLlamados = [...llamados, llamadoActivo];
-
-
-        setEsLlamadoNuevo(true);
-        setLlamados(nuevosLlamados);
-        setLlamadoActivo({ id: 0, oficina: "", atenciones: [] });
-
-
-        exportarLlamadosAExcel(nuevosLlamados);
-        */
-        limpiarDatos("cerrarDia");
-        navigate("/");
-    };
-
-    /*
-    const exportarLlamadosAExcel = (llamadosAExportar) => {
-        const dataForExcel = llamadosAExportar.flatMap((llamado) =>
-            llamado.atenciones.map((atencion) => ({
-                "ID de Llamado": llamado.id,
-                "ID de Atención": atencion.id,
-                "Oficina": llamado.oficina,
-                "Ticket": atencion.ticket,
-                "Funcionario": atencion.funcionario,
-                "Resolución": atencion.resolucion,
-                "Responsabilidad": atencion.responsabilidad,
-                "Fecha": atencion.fecha
-            }))
-        );
-
-        if (dataForExcel.length > 0) {
-            const worksheet = XLSX.utils.json_to_sheet(dataForExcel);
-
-            worksheet["A1"] = { t: "s", v: "Llamadas de " + userName.nombre2 };
-            worksheet["A1"].s = {
-                alignment: { horizontal: "center", vertical: "center" },
-                font: { bold: true, sz: 14 }
-            };
-            worksheet["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 7 } }];
-
-            const headers = [
-                "ID de Llamado",
-                "ID de Atención",
-                "Oficina",
-                "Ticket",
-                "Funcionario",
-                "Resolución",
-                "Responsabilidad",
-                "Fecha"
-            ];
-
-            headers.forEach((header, index) => {
-                worksheet[XLSX.utils.encode_cell({ r: 1, c: index })] = { t: "s", v: header };
-            });
-
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Resumen");
-
-            XLSX.writeFile(workbook, `reporte_llamados_${new Date().toLocaleDateString("es-CL")}.xlsx`);
-        } else {
-            console.log("No hay datos para exportar");
+    // Descarga el Excel con todas las atenciones y recién después limpia el día.
+    // Si la descarga falla, el día queda abierto para no perder los datos.
+    const handleCerrarDia = async () => {
+        setConfirmarCierre(false);
+        try {
+            const archivo = await exportarLlamadosAExcel(llamados, userName.nombre2);
+            limpiarDatos("cerrarDia");
+            navigate("/");
+            toast(archivo
+                ? `Día cerrado. Se descargó ${archivo}`
+                : "Día cerrado. No había atenciones para exportar.");
+        } catch (error) {
+            console.error("Error al exportar el reporte:", error);
+            toast("No se pudo generar el Excel. El día sigue abierto.", "error");
         }
     };
-    */
+
+    const atenciones = llamados.flatMap((llamado) => llamado.atenciones);
+    const resueltasN1 = atenciones.filter((a) => resolucionNormalizada(a.resolucion) === "RESUELTO").length;
+
+    const estadisticas = [
+        {valor: llamados.length, etiqueta: "Llamados"},
+        {valor: atenciones.length, etiqueta: "Atenciones"},
+        {valor: resueltasN1, etiqueta: "Resueltas en N1"},
+        {valor: atenciones.length - resueltasN1, etiqueta: "Derivadas a N2 o N3"}
+    ];
 
     return (
-        <div className="row">
-            <div className="col-md-12 mb-2">
-                <table className="table table-responsive-md table-info table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">Llamada</th>
-                            <th scope="col">Atención</th>
-                            <th scope="col">Oficina</th>
-                            <th scope="col">Ticket</th>
-                            <th scope="col">Funcionario</th>
-                            <th scope="col">Resolución</th>
-                            <th scope="col">Responsabilidad</th>
-                            <th scope="col">Fecha</th>
-                        </tr>
-                    </thead>
-                    <tbody className="table-group-divider">
-                        {
-                            llamados.map( (llamado) => (
+        <div className="space-y-5">
+            <Panel>
+                <dl className="grid grid-cols-2 divide-line sm:grid-cols-4 sm:divide-x">
+                    {estadisticas.map(({valor, etiqueta}) => (
+                        <div key={etiqueta} className="px-6 py-4">
+                            <dd className="text-[28px] font-semibold leading-8 tracking-tight">{valor}</dd>
+                            <dt className="text-sm text-ink-3">{etiqueta}</dt>
+                        </div>
+                    ))}
+                </dl>
+            </Panel>
+
+            <Panel className="overflow-hidden">
+                <div className="overflow-x-auto">
+                    <table className="w-full">
+                        <thead className="bg-surface-2">
+                            <tr>
+                                {ENCABEZADOS.map((encabezado) => (
+                                    <th key={encabezado} scope="col" className="whitespace-nowrap px-4 py-3 text-left text-sm font-medium text-ink-3">{encabezado}</th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {llamados.map((llamado) => (
                                 llamado.atenciones.map((atencion) => (
-                                    <tr key={`${llamado.id}-${atencion.id}`}>
-                                        <th scope="row">{llamado.id}</th>
-                                        <th scope="row">{atencion.id}</th>
-                                        <td>{llamado.oficina}</td>
-                                        <td>{atencion.ticket}</td>
-                                        <td>{atencion.funcionario}</td>
-                                        <td>{atencion.resolucion === "n1" || atencion.resolucion === ""  || atencion.resolucion === "N1" ? "RESUELTO" : atencion.resolucion}</td>
-                                        <td>{atencion.responsabilidad}</td>
-                                        <td>{atencion.fecha}</td>
+                                    <tr key={`${llamado.id}-${atencion.id}`} className="border-t border-line">
+                                        <th scope="row" className="px-4 py-3.5 text-left text-[15px] font-semibold">{llamado.id}</th>
+                                        <td className="px-4 py-3.5 text-[15px] text-ink-2">{atencion.id}</td>
+                                        <td className="px-4 py-3.5 text-[15px]">{llamado.oficina}</td>
+                                        <td className="px-4 py-3.5 font-mono text-[13.5px]">{atencion.ticket}</td>
+                                        <td className="px-4 py-3.5 text-[15px]">{atencion.funcionario}</td>
+                                        <td className="px-4 py-3.5"><ResolucionChip resolucion={atencion.resolucion}/></td>
+                                        <td className="px-4 py-3.5 text-[15px] text-ink-2">{atencion.responsabilidad === "SI" ? "Sí" : "No"}</td>
+                                        <td className="whitespace-nowrap px-4 py-3.5 text-[14px] text-ink-2">{atencion.fecha}</td>
                                     </tr>
                                 ))
-                            ))
-                        }
-                    </tbody>
-                </table>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+                {atenciones.length === 0 && (
+                    <p className="border-t border-line px-6 py-8 text-[15px] text-ink-2">
+                        Todavía no hay atenciones registradas. Crea un ticket para empezar.
+                    </p>
+                )}
+            </Panel>
+
+            <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="flex flex-wrap gap-3">
+                    <Button icon={Plus} onClick={handleNuevaAtencion}>Nueva atención</Button>
+                    <Button variant="ghost" icon={User} onClick={handleNuevoLlamado}>Nuevo llamado</Button>
+                </div>
+                <div className="flex flex-wrap items-center gap-4">
+                    <span className="flex items-center gap-2 text-sm text-ink-3">
+                        <Info className="size-4 shrink-0" aria-hidden="true"/>
+                        Cerrar el día descarga el Excel y borra todos los llamados.
+                    </span>
+                    <Button variant="danger" icon={Power} onClick={() => setConfirmarCierre(true)}>Cerrar día</Button>
+                </div>
             </div>
-            <div className="col-md-12 mb-2 d-flex justify-content-around">
-                <button type="submit"
-                        className="btn btn-info btn-lg text-light w-100"
-                        onClick={handleNuevaAtencion}>Nueva atención</button> &nbsp; &nbsp; &nbsp;
-                <button type="submit"
-                        className="btn btn-info btn-lg text-light w-100"
-                        onClick={handleNuevoLlamado}>Nuevo llamado</button> &nbsp; &nbsp; &nbsp;
-                <button type="submit"
-                        className="btn btn-danger btn-lg text-light w-100"
-                        onClick={handleCerrarDia}>Cerrar día</button>
-            </div>
+
+            <ConfirmDialog
+                open={confirmarCierre}
+                title="¿Cerrar el día?"
+                description={atenciones.length > 0
+                    ? `Se descargará un Excel con ${atenciones.length} ${atenciones.length === 1 ? "atención" : "atenciones"} y se borrarán todos los llamados de hoy. Esta acción no se puede deshacer.`
+                    : "No hay atenciones para exportar. Se limpiarán los datos del turno."}
+                confirmLabel="Cerrar día"
+                danger
+                onConfirm={handleCerrarDia}
+                onCancel={() => setConfirmarCierre(false)}
+            />
         </div>
     );
 };

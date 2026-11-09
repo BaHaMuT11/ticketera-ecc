@@ -1,30 +1,96 @@
-.boton-verde-sm {
-    background-color: #27ae60;
-    color: white;
-    border: none;
-    padding: 4px 6px;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+@import "tailwindcss";
+
+/* El modo oscuro se activa con la clase "dark" en <html> (ver ThemeProvider). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Tokens semánticos: lo único que cambia entre modo claro y oscuro.
+   Los componentes usan bg-surface, text-ink, text-brand, etc. y nunca colores fijos. */
+:root {
+  color-scheme: light;
+  --bg: #eef1f7;
+  --surface: #ffffff;
+  --surface-2: #f5f7fb;
+  --line: #dce2ee;
+  --ink: #0f1b33;
+  --ink-2: #4a5775;
+  --ink-3: #66728d;
+  --brand: #1f4bd8;
+  --brand-ink: #ffffff;
+  --brand-soft: #e4ebfd;
+  --ok: #0b7d50;
+  --ok-soft: #dcf3e7;
+  --warn: #9a5b00;
+  --warn-soft: #fff0d2;
+  --danger: #c8281e;
+  --danger-soft: #fde5e2;
+  --slip: #fbfcfe;
 }
 
-
-.btn-round {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.25rem;
+.dark {
+  color-scheme: dark;
+  --bg: #0a101f;
+  --surface: #121a2d;
+  --surface-2: #0d1425;
+  --line: #222d47;
+  --ink: #e8edf8;
+  --ink-2: #9facc9;
+  --ink-3: #8290b1;
+  --brand: #86a9ff;
+  --brand-ink: #0a101f;
+  --brand-soft: #1a274d;
+  --ok: #4fdc9f;
+  --ok-soft: #11342a;
+  --warn: #f5b84b;
+  --warn-soft: #3a2b10;
+  --danger: #ff8077;
+  --danger-soft: #3b1815;
+  --slip: #0c1322;
 }
 
-.boton-verde-sm:hover {
-    background-color: #219150;
+@theme inline {
+  --font-sans: "Onest Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-brand: var(--brand);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-soft: var(--brand-soft);
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-slip: var(--slip);
 }
 
-.nombre-maquina {
-    color: blue;
+html,
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Foco visible para quien navega con teclado. */
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

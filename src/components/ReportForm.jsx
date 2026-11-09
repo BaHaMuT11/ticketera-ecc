@@ -1,6 +1,8 @@
 import {useContext} from "react";
 import PropTypes from "prop-types";
 import {TicketContext} from "../context/TicketProvider.jsx";
+import {Panel} from "./ui/Panel.jsx";
+import {Field, Input} from "./ui/Field.jsx";
 
 const ReportForm = (props) => {
 
@@ -12,23 +14,14 @@ const ReportForm = (props) => {
 
     return (
         props.responsabilidad === "NO" &&
-            <div className="card">
-                <div className="card-header text-bg-primary d-flex justify-content-between align-items-center">
-                    <h5 className="mb-0">Reporte</h5>
-                </div>
-                <div className="card-body">
-                    <form id="formReport" onSubmit={handleSubmit}>
-                        <div className="row">
-                            <div className="col-md-12 mb-3">
-                                <label htmlFor="report" className="form-label">Reporte</label>
-                                <input type="text" className="form-control form-control-sm" id="report" name="report"
-                                       value={reporte}
-                                       onChange={e => setReporte(e.target.value)} required />
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+            <Panel className="p-5">
+                <form id="formReport" onSubmit={handleSubmit}>
+                    <Field label="Reporte" htmlFor="report" hint="Número con el que quedó registrada esta atención.">
+                        <Input id="report" name="report" mono value={reporte}
+                               onChange={e => setReporte(e.target.value)} required/>
+                    </Field>
+                </form>
+            </Panel>
     );
 };
 
