@@ -26,8 +26,8 @@ const Layout = () => {
             <Sidebar pasoActual={pasoActual}/>
             <div className="min-w-0 flex-1">
                 <Header pasoActual={pasoActual}/>
-                {/* pb-28: deja espacio para que el botón flotante no tape el final de la página */}
-                <main className="mx-auto max-w-[1280px] px-5 pb-28 pt-6 sm:px-8 sm:pt-7">
+                {/* pb-40: deja espacio para que el botón flotante (y el distintivo de Netlify) no tapen el final de la página */}
+                <main className="mx-auto max-w-[1280px] px-5 pb-40 pt-6 sm:px-8 sm:pt-7">
                     <Outlet/>
                 </main>
             </div>

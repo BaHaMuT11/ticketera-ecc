@@ -35,7 +35,7 @@ const HistorialLlamados = () => {
         <>
             <button type="button" onClick={() => setAbierto(true)}
                     aria-label={`Ver llamados y atenciones del día (${atenciones.length})`}
-                    className="fixed bottom-6 right-6 z-40 inline-flex h-12 items-center gap-2.5 rounded-full bg-brand pl-4 pr-3 font-semibold text-brand-ink shadow-lg transition-[filter] hover:brightness-110">
+                    className="fixed bottom-20 right-6 z-40 inline-flex h-12 items-center gap-2.5 rounded-full bg-brand pl-4 pr-3 font-semibold text-brand-ink shadow-lg transition-[filter] hover:brightness-110">
                 <ListChecks className="size-5" aria-hidden="true"/>
                 <span className="hidden sm:inline">Ver llamados</span>
                 <span className="grid h-7 min-w-7 place-items-center rounded-full bg-brand-ink/20 px-2 text-sm">{atenciones.length}</span>
