@@ -29,7 +29,7 @@ export const ToastProvider = ({children}) => {
         <ToastContext.Provider value={valor}>
             {children}
             <div aria-live="polite" role="status"
-                 className="pointer-events-none fixed bottom-6 right-6 z-[60] flex flex-col items-end gap-2">
+                 className="pointer-events-none fixed bottom-6 left-1/2 z-[60] flex w-max max-w-[calc(100vw-2rem)] -translate-x-1/2 flex-col items-center gap-2">
                 {avisos.map((aviso) => (
                     <div key={aviso.id}
                          className="pointer-events-auto flex max-w-sm items-center gap-3 rounded-xl border border-line bg-surface px-4 py-3 text-[15px] text-ink shadow-lg">

@@ -8,16 +8,15 @@ import {Plus, Power, User, Info} from "lucide-react";
 import {Panel} from "./ui/Panel.jsx";
 import {Button} from "./ui/Button.jsx";
 import {ConfirmDialog} from "./ui/ConfirmDialog.jsx";
-import ResolucionChip from "./ResolucionChip.jsx";
-import {resolucionNormalizada} from "../utilities/Atencion.js";
+import TablaAtenciones from "./TablaAtenciones.jsx";
+import {esResponsabilidad, resolucionNormalizada} from "../utilities/Atencion.js";
+import {editarAtencion, editarLlamado, eliminarAtencion, eliminarLlamado, idTrasEliminarLlamado} from "../utilities/Llamados.js";
 import {exportarLlamadosAExcel} from "../utilities/ExportExcel.js";
 import {LLAMADO_INICIAL, SRCEI_INICIAL, TICKET_INICIAL} from "../utilities/EstadosIniciales.js";
 
-const ENCABEZADOS = ["Llamado", "Atención", "Oficina", "Ticket", "Funcionario", "Resolución", "Del SRCeI", "Fecha"];
-
 const SummaryChart = () => {
 
-    const {userName, llamados, setLlamados, setLlamadoActivo, setEsLlamadoNuevo, setIdLLamadoActiva} = useContext(UserContext);
+    const {userName, llamados, setLlamados, setLlamadoActivo, setEsLlamadoNuevo, idLLamadoActiva, setIdLLamadoActiva} = useContext(UserContext);
 
     const {ticketFormData, setTicketFormData, setReporte, setTicket, setDerivacion} = useContext(TicketContext);
 
@@ -72,15 +71,51 @@ const SummaryChart = () => {
         }
     }
 
-    const handleNuevaAtencion = () => {
-        limpiarDatos("limpiarAtencion")
-        navigate("/baha-ticket");
-    };
-
     const handleNuevoLlamado = () => {
         limpiarDatos("limpiarLlamado");
         navigate("/baha-ticket");
     };
+
+    // La tabla puede haber editado o eliminado filas desde la última vez que se trabajó el llamado.
+    // Por eso se retoma desde la lista de llamados (la fuente de verdad) y no desde la copia en "llamadoActivo".
+    // Si ese llamado ya no existe (se eliminó), se parte uno nuevo.
+    const handleNuevaAtencion = () => {
+        const activo = llamados.find((llamado) => llamado.id === idLLamadoActiva);
+        if (!activo) {
+            handleNuevoLlamado();
+            return;
+        }
+        limpiarDatos("limpiarAtencion");
+        setLlamadoActivo({...activo, atenciones: activo.atenciones.map((atencion) => ({...atencion}))});
+        // El formulario manda la oficina al guardar: debe llevar la que tiene el llamado ahora (puede haberse editado).
+        setTicketFormData((previo) => ({...previo, oficina: activo.oficina}));
+        navigate("/baha-ticket");
+    };
+
+    const handleEditarLlamado = (llamadoId, cambios) =>
+        setLlamados((actuales) => editarLlamado(actuales, llamadoId, cambios));
+
+    const handleEditarAtencion = (llamadoId, atencionId, cambios) =>
+        setLlamados((actuales) => editarAtencion(actuales, llamadoId, atencionId, cambios));
+
+    // Al desaparecer un llamado los siguientes se renumeran: hay que mover también el puntero al llamado activo.
+    const registrarEliminacion = (resultado, llamadoId, mensaje) => {
+        setLlamados(resultado.llamados);
+        if (resultado.llamadoEliminado) {
+            setIdLLamadoActiva(idTrasEliminarLlamado(idLLamadoActiva, llamadoId) ?? -1);
+        }
+        toast(mensaje);
+    };
+
+    const handleEliminarAtencion = (llamadoId, atencionId) => {
+        const resultado = eliminarAtencion(llamados, llamadoId, atencionId);
+        registrarEliminacion(resultado, llamadoId, resultado.llamadoEliminado
+            ? `Se eliminó la atención y el llamado ${llamadoId}`
+            : "Se eliminó la atención");
+    };
+
+    const handleEliminarLlamado = (llamadoId) =>
+        registrarEliminacion(eliminarLlamado(llamados, llamadoId), llamadoId, `Se eliminó el llamado ${llamadoId}`);
 
     // Descarga el Excel con todas las atenciones y recién después limpia el día.
     // Si la descarga falla, el día queda abierto para no perder los datos.
@@ -106,15 +141,16 @@ const SummaryChart = () => {
         {valor: llamados.length, etiqueta: "Llamados"},
         {valor: atenciones.length, etiqueta: "Atenciones"},
         {valor: resueltasN1, etiqueta: "Resueltas en N1"},
-        {valor: atenciones.length - resueltasN1, etiqueta: "Derivadas a N2 o N3"}
+        {valor: atenciones.length - resueltasN1, etiqueta: "Derivadas a N2 o N3"},
+        {valor: atenciones.filter(esResponsabilidad).length, etiqueta: "Tickets de responsabilidad"}
     ];
 
     return (
         <div className="space-y-5">
             <Panel>
-                <dl className="grid grid-cols-2 divide-line sm:grid-cols-4 sm:divide-x">
+                <dl className="grid grid-cols-2 divide-line sm:grid-cols-5 sm:divide-x">
                     {estadisticas.map(({valor, etiqueta}) => (
-                        <div key={etiqueta} className="px-6 py-4">
+                        <div key={etiqueta} className="px-5 py-4 last:col-span-2 sm:last:col-span-1">
                             <dd className="text-[28px] font-semibold leading-8 tracking-tight">{valor}</dd>
                             <dt className="text-sm text-ink-3">{etiqueta}</dt>
                         </div>
@@ -122,40 +158,12 @@ const SummaryChart = () => {
                 </dl>
             </Panel>
 
-            <Panel className="overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full">
-                        <thead className="bg-surface-2">
-                            <tr>
-                                {ENCABEZADOS.map((encabezado) => (
-                                    <th key={encabezado} scope="col" className="whitespace-nowrap px-4 py-3 text-left text-sm font-medium text-ink-3">{encabezado}</th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {llamados.map((llamado) => (
-                                llamado.atenciones.map((atencion) => (
-                                    <tr key={`${llamado.id}-${atencion.id}`} className="border-t border-line">
-                                        <th scope="row" className="px-4 py-3.5 text-left text-[15px] font-semibold">{llamado.id}</th>
-                                        <td className="px-4 py-3.5 text-[15px] text-ink-2">{atencion.id}</td>
-                                        <td className="px-4 py-3.5 text-[15px]">{llamado.oficina}</td>
-                                        <td className="px-4 py-3.5 font-mono text-[13.5px]">{atencion.ticket}</td>
-                                        <td className="px-4 py-3.5 text-[15px]">{atencion.funcionario}</td>
-                                        <td className="px-4 py-3.5"><ResolucionChip resolucion={atencion.resolucion}/></td>
-                                        <td className="px-4 py-3.5 text-[15px] text-ink-2">{atencion.responsabilidad === "SI" ? "Sí" : "No"}</td>
-                                        <td className="whitespace-nowrap px-4 py-3.5 text-[14px] text-ink-2">{atencion.fecha}</td>
-                                    </tr>
-                                ))
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-                {atenciones.length === 0 && (
-                    <p className="border-t border-line px-6 py-8 text-[15px] text-ink-2">
-                        Todavía no hay atenciones registradas. Crea un ticket para empezar.
-                    </p>
-                )}
-            </Panel>
+            <TablaAtenciones
+                llamados={llamados}
+                onEditarLlamado={handleEditarLlamado}
+                onEditarAtencion={handleEditarAtencion}
+                onEliminarAtencion={handleEliminarAtencion}
+                onEliminarLlamado={handleEliminarLlamado}/>
 
             <div className="flex flex-wrap items-center justify-between gap-4">
                 <div className="flex flex-wrap gap-3">

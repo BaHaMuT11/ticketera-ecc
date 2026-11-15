@@ -389,7 +389,7 @@ const TicketForm = () => {
                                 : <ChevronDown className="size-5 text-ink-3" aria-hidden="true"/>}
                         </button>
                         {derivacionAbierta && (
-                            <div id="datosDerivar" className="grid items-end gap-x-5 gap-y-4 border-t border-line p-6 sm:grid-cols-2">
+                            <div id="datosDerivar" className="grid gap-y-4 border-t border-line p-6">
                                 <Field label="Horario" htmlFor="horario"
                                        extra={<SegmentedButtons options={HORARIOS} value={ticketFormData.horario}
                                                                 onSelect={(horario) => setTicketFormData({...ticketFormData, horario})}/>}>
@@ -400,7 +400,7 @@ const TicketForm = () => {
                                     <Input id="direccion" name="direccion" mono value={ticketFormData.direccion}
                                            onChange={handleChange} placeholder="Obligatorio N3 y N2 SRCeI"/>
                                 </Field>
-                                <Field label="Correo electrónico" htmlFor="correoElectronico2" className="sm:col-span-2"
+                                <Field label="Correo electrónico" htmlFor="correoElectronico2"
                                        extra={<Segmented name="tipoCorreo" small options={TIPOS_CORREO}
                                                          value={ticketFormData.tipoCorreo} onChange={handleChange}/>}>
                                     <div className="flex items-center gap-2">

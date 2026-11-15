@@ -2,7 +2,7 @@ import {useEffect} from "react";
 import PropTypes from "prop-types";
 import {X} from "lucide-react";
 
-export const Modal = ({open, onClose, title, children}) => {
+export const Modal = ({open, onClose, title, ancho = "max-w-lg", children}) => {
     useEffect(() => {
         if (!open) return;
         const alPresionar = (e) => {
@@ -18,7 +18,7 @@ export const Modal = ({open, onClose, title, children}) => {
         <div className="fixed inset-0 z-50 grid place-items-center p-4">
             <div className="absolute inset-0 bg-black/55" onClick={onClose} aria-hidden="true"></div>
             <div role="dialog" aria-modal="true" aria-labelledby="modal-titulo"
-                 className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-line bg-surface shadow-2xl">
+                 className={`relative max-h-[90vh] w-full ${ancho} overflow-y-auto rounded-2xl border border-line bg-surface shadow-2xl`}>
                 <div className="flex items-center justify-between border-b border-line px-6 py-4">
                     <h2 id="modal-titulo" className="text-lg font-semibold tracking-tight">{title}</h2>
                     <button type="button" aria-label="Cerrar" onClick={onClose}
@@ -36,5 +36,6 @@ Modal.propTypes = {
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
+    ancho: PropTypes.string,
     children: PropTypes.node
 };

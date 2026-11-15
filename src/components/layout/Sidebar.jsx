@@ -53,7 +53,7 @@ export const Sidebar = ({pasoActual}) => {
                 </span>
                 <div>
                     <div className="text-[17px] font-semibold leading-5 tracking-tight">Ticketera ECC</div>
-                    <div className="text-[13px] leading-5 text-ink-3">Versión 4.0.1</div>
+                    <div className="text-[13px] leading-5 text-ink-3">Versión 4.1.1</div>
                 </div>
             </div>
 

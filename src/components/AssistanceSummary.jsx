@@ -1,11 +1,12 @@
 import {useContext} from "react";
 import {UserContext} from "../context/UserProvider.jsx";
 import {useNavigate} from "react-router";
-import {ArrowRight, List} from "lucide-react";
+import {ArrowRight, List, ShieldCheck} from "lucide-react";
 import {Panel} from "./ui/Panel.jsx";
 import {Chip} from "./ui/Chip.jsx";
 import {Button} from "./ui/Button.jsx";
 import ResolucionChip from "./ResolucionChip.jsx";
+import {esResponsabilidad} from "../utilities/Atencion.js";
 
 
 const AssistanceSummary = () => {
@@ -29,6 +30,7 @@ const AssistanceSummary = () => {
     }
 
     const total = llamadoActivo.atenciones.length;
+    const totalResponsabilidad = llamadoActivo.atenciones.filter(esResponsabilidad).length;
 
     return (
         <div className="mx-auto max-w-[820px]">
@@ -38,9 +40,15 @@ const AssistanceSummary = () => {
                         <div className="text-sm text-ink-3">Llamado {llamadoActivo.id}</div>
                         <h2 className="text-xl font-semibold tracking-tight">{llamadoActivo.oficina || "Sin oficina"}</h2>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-ink-2">
-                        <List className="size-4" aria-hidden="true"/>
-                        {total} {total === 1 ? "atención" : "atenciones"}
+                    <div className="flex flex-wrap items-center justify-end gap-x-5 gap-y-1 text-sm text-ink-2">
+                        <span className="flex items-center gap-2">
+                            <List className="size-4" aria-hidden="true"/>
+                            {total} {total === 1 ? "atención" : "atenciones"}
+                        </span>
+                        <span className="flex items-center gap-2">
+                            <ShieldCheck className="size-4" aria-hidden="true"/>
+                            {totalResponsabilidad} {totalResponsabilidad === 1 ? "ticket" : "tickets"} de responsabilidad
+                        </span>
                     </div>
                 </div>
                 <div className="divide-y divide-line">

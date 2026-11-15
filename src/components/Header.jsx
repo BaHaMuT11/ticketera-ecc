@@ -3,12 +3,13 @@ import PropTypes from "prop-types";
 import {Ticket} from "lucide-react";
 import {UserContext} from "../context/UserProvider.jsx";
 import {ThemeSwitch} from "./layout/ThemeSwitch.jsx";
+import {esResponsabilidad} from "../utilities/Atencion.js";
 import {PANTALLAS} from "./layout/pantallas.js";
 
 const Header = ({pasoActual}) => {
     const {llamados} = useContext(UserContext);
     const pantalla = PANTALLAS[pasoActual];
-    const totalAtenciones = llamados.reduce((total, llamado) => total + llamado.atenciones.length, 0);
+    const atenciones = llamados.flatMap((llamado) => llamado.atenciones);
 
     return (
         <header className="flex min-h-[72px] flex-wrap items-center justify-between gap-x-6 gap-y-3 border-b border-line px-5 py-3 sm:px-8">
@@ -24,9 +25,10 @@ const Header = ({pasoActual}) => {
             <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
                 {pasoActual > 0 && (
                     <>
-                        <div className="flex items-center gap-5 text-sm">
+                        <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm">
                             <div><span className="text-ink-3">Llamados</span> <span className="ml-1 font-semibold">{llamados.length}</span></div>
-                            <div><span className="text-ink-3">Atenciones</span> <span className="ml-1 font-semibold">{totalAtenciones}</span></div>
+                            <div><span className="text-ink-3">Atenciones</span> <span className="ml-1 font-semibold">{atenciones.length}</span></div>
+                            <div title="Tickets de responsabilidad"><span className="text-ink-3">Responsabilidad</span> <span className="ml-1 font-semibold">{atenciones.filter(esResponsabilidad).length}</span></div>
                         </div>
                         <span className="hidden h-6 w-px bg-line sm:block"></span>
                     </>
