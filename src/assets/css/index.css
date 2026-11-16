@@ -24,6 +24,8 @@
   --danger: #c8281e;
   --danger-soft: #fde5e2;
   --slip: #fbfcfe;
+  --gold: #b88a0a;
+  --gold-soft: #fbf1cc;
 }
 
 .dark {
@@ -45,6 +47,8 @@
   --danger: #ff8077;
   --danger-soft: #3b1815;
   --slip: #0c1322;
+  --gold: #e9bb3c;
+  --gold-soft: #2d2410;
 }
 
 @theme inline {
@@ -67,6 +71,8 @@
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
   --color-slip: var(--slip);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
 }
 
 html,

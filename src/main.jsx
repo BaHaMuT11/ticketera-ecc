@@ -9,20 +9,23 @@ import {UserProvider} from "./context/UserProvider.jsx";
 import {TicketProvider} from "./context/TicketProvider.jsx";
 import ResponsibilityProvider from "./context/ResponsibilityProvider.jsx";
 import {ThemeProvider} from "./context/ThemeProvider.jsx";
+import {PreferenciasTablaProvider} from "./context/PreferenciasTablaProvider.jsx";
 import {ToastProvider} from "./context/ToastProvider.jsx";
 
 createRoot(document.getElementById('root')).render(
     <ThemeProvider>
         <ToastProvider>
-            <ResponsibilityProvider>
-                <TicketProvider>
-                    <UserProvider>
-                        <BrowserRouter>
-                            <App/>
-                        </BrowserRouter>
-                    </UserProvider>
-                </TicketProvider>
-            </ResponsibilityProvider>
+            <PreferenciasTablaProvider>
+                <ResponsibilityProvider>
+                    <TicketProvider>
+                        <UserProvider>
+                            <BrowserRouter>
+                                <App/>
+                            </BrowserRouter>
+                        </UserProvider>
+                    </TicketProvider>
+                </ResponsibilityProvider>
+            </PreferenciasTablaProvider>
         </ToastProvider>
     </ThemeProvider>,
 )

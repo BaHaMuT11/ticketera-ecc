@@ -1,4 +1,4 @@
-import {useMemo, useState} from "react";
+import {useContext, useMemo, useState} from "react";
 import PropTypes from "prop-types";
 import {ArrowDown, ArrowUp, ChevronLeft, ChevronRight, Trash2} from "lucide-react";
 import {Panel} from "./ui/Panel.jsx";
@@ -9,6 +9,7 @@ import EditableCell from "./EditableCell.jsx";
 import ResolucionChip from "./ResolucionChip.jsx";
 import {aInputFecha, formatearFecha, resolucionNormalizada} from "../utilities/Atencion.js";
 import {formTransform} from "../utilities/FormTransform.js";
+import {PreferenciasTablaContext} from "../context/PreferenciasTablaProvider.jsx";
 
 const POR_PAGINA = 10;
 
@@ -48,9 +49,9 @@ Celda.propTypes = {
  */
 const TablaAtenciones = ({llamados, soloLectura = false, onEditarLlamado, onEditarAtencion, onEliminarAtencion, onEliminarLlamado}) => {
 
+    // Orden y vista se comparten con las demás tablas (resumen e historial) y se recuerdan.
     // "desc": la atención más reciente arriba (por defecto). "asc": la primera del día arriba.
-    const [orden, setOrden] = useState("desc");
-    const [vista, setVista] = useState("paginas");
+    const {orden, setOrden, vista, setVista} = useContext(PreferenciasTablaContext);
     const [pagina, setPagina] = useState(0);
     const [porEliminar, setPorEliminar] = useState(null);
 
@@ -65,6 +66,7 @@ const TablaAtenciones = ({llamados, soloLectura = false, onEditarLlamado, onEdit
             ));
     }, [llamados, orden]);
 
+    const hayDorados = llamados.some((llamado) => llamado.atenciones.length > 1);
     const totalPaginas = Math.max(1, Math.ceil(filas.length / POR_PAGINA));
     // Si al eliminar desaparece la última página, se muestra la nueva última.
     const paginaActual = Math.min(pagina, totalPaginas - 1);
@@ -73,7 +75,7 @@ const TablaAtenciones = ({llamados, soloLectura = false, onEditarLlamado, onEdit
     const visibles = mostrarTodas ? filas : filas.slice(inicio, inicio + POR_PAGINA);
 
     const cambiarOrden = () => {
-        setOrden((actual) => (actual === "desc" ? "asc" : "desc"));
+        setOrden(orden === "desc" ? "asc" : "desc");
         setPagina(0);
     };
 
@@ -128,8 +130,11 @@ const TablaAtenciones = ({llamados, soloLectura = false, onEditarLlamado, onEdit
                     </thead>
                     <tbody>
                         {visibles.map(({llamado, atencion}) => (
-                            <tr key={`${llamado.id}-${atencion.id}`} className="border-t border-line">
-                                <th scope="row" className={`${TD} text-left text-[15px] font-semibold`}>{llamado.id}</th>
+                            <tr key={`${llamado.id}-${atencion.id}`}
+                                title={llamado.atenciones.length > 1 ? `Llamado ${llamado.id} con ${llamado.atenciones.length} atenciones` : undefined}
+                                className={`border-t border-line ${llamado.atenciones.length > 1 ? "bg-gold-soft" : ""}`}>
+                                <th scope="row"
+                                    className={`${TD} text-left text-[15px] font-semibold ${llamado.atenciones.length > 1 ? "shadow-[inset_4px_0_0_var(--gold)]" : ""}`}>{llamado.id}</th>
                                 <td className={`${TD} text-[15px] text-ink-2`}>{atencion.id}</td>
                                 <td className={`${TD} text-[15px]`}>
                                     <Celda soloLectura={soloLectura} label="Oficina" value={llamado.oficina} normalizar={formTransform}
@@ -203,11 +208,19 @@ const TablaAtenciones = ({llamados, soloLectura = false, onEditarLlamado, onEdit
 
             {filas.length > 0 && (
                 <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-t border-line bg-surface-2 px-4 py-3">
-                    <p className="text-sm text-ink-2" aria-live="polite">
+                    <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
+                        <p className="text-sm text-ink-2" aria-live="polite">
                         {mostrarTodas || filas.length <= POR_PAGINA
                             ? `Mostrando ${plural(filas.length, "atención", "atenciones")}`
                             : `Mostrando ${inicio + 1}–${inicio + visibles.length} de ${filas.length} atenciones`}
                     </p>
+                        {hayDorados && (
+                            <span className="inline-flex items-center gap-2 text-sm text-ink-2">
+                                <span className="size-3.5 rounded-sm bg-gold-soft ring-1 ring-gold" aria-hidden="true"/>
+                                Llamado con más de una atención
+                            </span>
+                        )}
+                    </div>
                     <div className="flex flex-wrap items-center gap-3">
                         {filas.length > POR_PAGINA && (
                             <SegmentedButtons options={OPCIONES_VISTA} value={vista} onSelect={cambiarVista}/>
